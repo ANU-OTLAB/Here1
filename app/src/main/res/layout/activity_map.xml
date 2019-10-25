@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MapActivity">
-<ImageView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:src="@drawable/daum"
-    ></ImageView>
+    <RelativeLayout
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
