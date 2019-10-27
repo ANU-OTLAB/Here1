@@ -1,18 +1,14 @@
 package com.otlab.here;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.security.MessageDigest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,28 +18,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(), "ㅅㄷㄴㅅ", Toast.LENGTH_SHORT).show();
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String key = new String(Base64.encode(md.digest(), 0));
-                Log.d("Hash key:", "!!!!!!!" + key + "!!!!!!");
-            }
-        } catch (Exception e) {
-            Log.e("name not found", e.toString());
-        }
 
-    }
-
-    public void echo(View view) {
-        Toast.makeText(this, "안녕", Toast.LENGTH_LONG).show();
     }
 
     public void showMap(View view) {
-        Intent intent = new Intent(getApplication(), MapActivity.class);
-        startActivity(intent);
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //GPS 설정화면으로 이동
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplication(), MapActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void goSetting(View view) {
@@ -55,4 +43,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplication(), OptionActivity.class);
         startActivity(intent);
     }
+/*
+    try {
+        PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+        for (Signature signature : info.signatures) {
+            MessageDigest md;
+            md = MessageDigest.getInstance("SHA");
+            md.update(signature.toByteArray());
+            String key = new String(Base64.encode(md.digest(), 0));
+            Log.d("Hash key:", "!!!!!!!" + key + "!!!!!!");
+        }
+    } catch (Exception e) {
+        Log.e("name not found", e.toString());
+    }*/
+
 }
