@@ -32,7 +32,7 @@ public class SplashActivity extends Activity {
         hd.postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(getApplication(), LoginActivity.class));
+                startActivity(new Intent(getApplication(), MapActivity.class));
                 SplashActivity.this.finish();
             }
         }, 1000);
