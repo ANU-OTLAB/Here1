@@ -1,5 +1,6 @@
 package com.otlab.here;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -36,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 로그인 성공시 저장 처리, 예제는 무조건 저장
                 save();
+                startActivity(new Intent(getApplication(), SplashActivity.class));
+                finish();
             }
         });
     }

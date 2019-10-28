@@ -1,14 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- 전체적으로 세로 정렬 사용 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E8E8E8"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/Option_Intro"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:text="this is option"
-        android:textAlignment="center"
-        android:textSize="32dp"></TextView>
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/option_border"
+        android:padding="20dp"
+        android:text="OPTION"
+        android:textColor="#000000"
+        android:textSize="20pt"
+        android:textStyle="bold" />
+    <!-- 옵션 제목 -->
 
+    <!-- 사용자 정보와 로그아웃 버튼은 가로 정렬 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <!-- 사용자 정보:whoami -->
+        <Button
+            android:id="@+id/whoami"
+            android:layout_width="255dp"
+            android:layout_height="75dp"
+            android:background="@drawable/option_button_left_round_edge"
+            android:drawableLeft="@drawable/whoami"
+            android:duplicateParentState="false"
+            android:editable="false"
+            android:gravity="center"
+            android:paddingLeft="80dp"
+            android:paddingRight="70dp"
+            android:text="whoami"
+            android:textSize="14sp" />
+
+        <!-- 로그 아웃 : logout -->
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="@drawable/option_button_right_round_edge"
+            android:drawableLeft="@drawable/logout"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:text="logout"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- 기본적으로 설정되는 km를 결정하는 버튼 -->
+    <Button
+        android:id="@+id/Option_Set"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/option_button_round_edge"
+        android:drawableLeft="@drawable/membership_setting"
+        android:paddingLeft="150dp"
+        android:paddingRight="130dp"
+        android:text="setting"
+        android:textSize="14sp" />
+
+    <!--개발자 소개 + popup창으로 뜨게 해보려고 함 or Textview -->
+    <Button
+        android:id="@+id/intro"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/option_button_round_edge"
+        android:drawableLeft="@drawable/developer_intro"
+        android:gravity="center"
+        android:paddingLeft="150dp"
+        android:paddingRight="120dp"
+        android:text="DEVELOPER"
+        android:textSize="14sp" />
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.otlab.here;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -10,7 +11,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class MainActivity extends AppCompatActivity implements Serializable {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +32,20 @@ public class MainActivity extends AppCompatActivity {
             intent.addCategory(Intent.CATEGORY_DEFAULT);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(getApplication(), MapActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(getApplication(), MapActivity.class));
+
         }
     }
 
     public void goSetting(View view) {
-        Intent intent = new Intent(getApplication(), SettingActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(getApplication(), SettingActivity.class));
+
     }
 
     public void goOption(View view) {
-        Intent intent = new Intent(getApplication(), OptionActivity.class);
-        startActivity(intent);
+
+        startActivity(new Intent(getApplication(), OptionActivity.class).putExtra("parent", this));
+
     }
 /*
     try {
