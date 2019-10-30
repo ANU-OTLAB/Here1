@@ -9,8 +9,7 @@ import android.widget.Toast;
 public class SplashActivity extends Activity {
 
     private boolean saveLoginData;
-    private String id;
-    private String pwd;
+    private String name;
 
     private SharedPreferences appData;
 
@@ -19,33 +18,31 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_splash);
 
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
         load();
-
-        Toast.makeText(getApplicationContext(), saveLoginData + " // " + id + " // " + pwd, Toast.LENGTH_SHORT).show();
 
         // 이전에 로그인 정보를 저장시킨 기록이 있다면
         if (saveLoginData) {
+            Toast.makeText(getApplicationContext(), name+"님 환영합니다.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplication(), MainActivity.class));
-            SplashActivity.this.finish();
+            finish();
         } else {
             startActivity(new Intent(getApplication(), LoginActivity.class));
-            SplashActivity.this.finish();
+            finish();
         }
 
     }
-/*
+
     @Override
     public void onBackPressed() {
 
-    }*/
+    }
 
     // 설정값을 불러오는 함수
     private void load() {
         // SharedPreferences 객체.get타입( 저장된 이름, 기본값 )
         // 저장된 이름이 존재하지 않을 시 기본값
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
-        id = appData.getString("ID", "");
-        pwd = appData.getString("PWD", "");
+        name = appData.getString("NAME", "");
     }
 }
