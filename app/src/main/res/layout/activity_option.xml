@@ -68,6 +68,18 @@
 
     <!--개발자 소개 + popup창으로 뜨게 해보려고 함 or Textview -->
     <Button
+        android:id="@+id/Friend_Set"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/option_button_round_edge"
+        android:drawableLeft="@drawable/membership_setting"
+        android:paddingLeft="150dp"
+        android:paddingRight="130dp"
+        android:text="Friend"
+        android:textSize="14sp" />
+
+    <Button
         android:id="@+id/intro"
         android:layout_width="match_parent"
         android:layout_height="84dp"

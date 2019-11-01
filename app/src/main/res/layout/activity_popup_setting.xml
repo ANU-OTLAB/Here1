@@ -39,7 +39,7 @@
             android:layout_marginBottom="3dp"
             android:alpha="0.87"
             android:gravity="center"
-            android:text="이름"
+            android:text="알람이름"
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
 
@@ -92,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="목적지"
+            android:text="알람대상"
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
 
@@ -118,7 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="시간"
+            android:text="만료기한"
             android:textColor="#FFFFFF" />
 
         <EditText
