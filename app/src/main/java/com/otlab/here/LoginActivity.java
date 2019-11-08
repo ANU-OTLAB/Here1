@@ -10,7 +10,9 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class LoginActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private EditText idText;
     private EditText pwdText;
@@ -25,42 +27,48 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // 설정값 불러오기
-
+        // view 불러오기
         idText = findViewById(R.id.idText);
         pwdText = findViewById(R.id.pwdText);
         checkBox = findViewById(R.id.checkBox);
         loginBtn = findViewById(R.id.loginBtn);
         joinBtn = findViewById(R.id.joinBtn);
 
+        //button 클릭 리스너
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (loginValid()) {
-                    if (save()) {
-                        startActivity(new Intent(getApplication(), MainActivity.class));
-                        finish();
+                if (validationCheck()) {
+                    if (requestSave()) {
+                        goMain();
                     } else {
-                        //가입되지 않은 사용자 임을 출력
+                        //가입되지 않은 사용자 임을 출력 하거나 오류 출력
                     }
                 } else {
                     //유효하지 않은 id, pw이라 출력
                 }
             }
         });
+
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplication(), JoinActivity.class));
-                //finish();
+                goJoin();
             }
         });
     }
 
-    // 설정값을 저장하는 함수
-    private boolean save() {
+    private void goMain() {
+        startActivity(new Intent(getApplication(), MainActivity.class));
+        finish();
+    }
 
-        //서버에서 성공여부와 사용자 이름 불러 옴
+    private void goJoin() {
+        startActivity(new Intent(getApplication(), JoinActivity.class).putExtra("login", this));
+    }
+
+    // 서버에 id, pw를 전송 후 로그인 성공여부와 사용자 이름을 불러 옴
+    private boolean requestSave() {
 
         // SharedPreferences 객체만으론 저장 불가능 Editor 사용
         appData = getSharedPreferences("appData", MODE_PRIVATE);
@@ -78,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean loginValid() {
+    private boolean validationCheck() {
         return true;
     }
 }

@@ -27,7 +27,7 @@ public class SplashActivity extends Activity {
             finish();
         } else {
             startActivity(new Intent(getApplication(), LoginActivity.class));
-            finish();
+            //finish();
         }
 
     }

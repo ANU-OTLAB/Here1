@@ -64,7 +64,7 @@ public class OptionActivity extends Activity {
         editor.clear();
         editor.commit();
         startActivity(new Intent(getApplication(), SplashActivity.class));
-        MainActivity ma = (MainActivity) getIntent().getSerializableExtra("parent");
+        MainActivity ma = (MainActivity) getIntent().getSerializableExtra("main");
         ma.finish();
         finish();
     }
@@ -80,7 +80,7 @@ public class OptionActivity extends Activity {
     }
     //개발자 보는걸로 가기
     protected void developer(){
-        Intent intent = new Intent(getApplicationContext(),DeveloperActivity.class);
+        Intent intent = new Intent(getApplicationContext(),DeveloperActivity.class).putExtra("hi", 1).putExtra("main", getIntent().getSerializableExtra("main"));
         startActivity(intent);
     }
 }

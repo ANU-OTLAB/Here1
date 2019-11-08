@@ -1,6 +1,7 @@
 package com.otlab.here;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,10 +30,14 @@ public class JoinActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkValidation()) {
-                    finish();
-                } else {
+                try {
+                    if (checkValidation()) {
+                        finish();
+                    } else {
 
+                    }
+                }catch (Exception e){
+                    Log.d("!!!!!", e.toString());
                 }
 
             }

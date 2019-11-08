@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(getApplicationContext(), "ㅅㄷㄴㅅ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), SettingItem.ServiceType.UPDATE+"ㅅㄷㄴㅅ", Toast.LENGTH_SHORT).show();
 
 
     }
@@ -39,13 +39,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     public void goSetting(View view) {
         startActivity(new Intent(getApplication(), SettingActivity.class));
-
     }
 
     public void goOption(View view) {
-
-        startActivity(new Intent(getApplication(), OptionActivity.class).putExtra("parent", this));
-
+        startActivity(new Intent(getApplication(), OptionActivity.class).putExtra("main", this));
     }
 /*
     try {

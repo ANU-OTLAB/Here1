@@ -8,72 +8,90 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import java.sql.Time;
-
 public class SettingPopupActivity extends Activity {
 
-    TextView NameText;
-    TextView DistanceText;
-    TextView DestinationText;
-    TextView TimeText;
-    TextView Popupname;
-    int ItemPosition;
+    Intent intent;
+    SettingItem.ServiceType serviceType;
+
+    TextView nameText;
+    TextView distanceText;
+    TextView destinationText;
+    TextView timeText;
+    TextView popupName;
+    int itemPosition;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup_setting);
 
-        NameText = (TextView)findViewById(R.id.SetName);
-        DistanceText = (TextView)findViewById(R.id.SetDistance);
-        DestinationText = (TextView)findViewById(R.id.SetDestination);
-        TimeText = (TextView)findViewById(R.id.SetTime);
-        Popupname = (TextView)findViewById(R.id.PopupName);
+        //view 불러 오기
+        nameText = findViewById(R.id.SetName);
+        distanceText = findViewById(R.id.SetDistance);
+        destinationText = findViewById(R.id.SetDestination);
+        timeText = findViewById(R.id.SetTime);
+        popupName = findViewById(R.id.PopupName);
 
         //데이터 가져오기
-        Intent intent = getIntent();
-        String SettingName = intent.getStringExtra("settingName");
-        String Distance = intent.getStringExtra("distance");
-        String Destination = intent.getStringExtra("destination");
-        String Time = intent.getStringExtra("time");
-        ItemPosition = intent.getIntExtra("position",0);
+        intent = getIntent();
+        serviceType = (SettingItem.ServiceType) intent.getSerializableExtra("service");
 
-        NameText.setText(SettingName);
-        DistanceText.setText(Distance);
-        DestinationText.setText(Destination);
-        TimeText.setText(Time);
-        Popupname.setText(SettingName);
+        String SettingName = "";
+        String Distance = "";
+        String Destination = "";
+        String Time = "";
+        //service 생성 시
+        if (serviceType == SettingItem.ServiceType.CREATE) {
+
+        }
+        //service 수정 시
+        if (serviceType == SettingItem.ServiceType.UPDATE) {
+            SettingName = intent.getStringExtra("settingName");
+            Distance = intent.getStringExtra("distance");
+            Destination = intent.getStringExtra("destination");
+            Time = intent.getStringExtra("time");
+        }
+        //service 삭제 시
+        if (serviceType == SettingItem.ServiceType.DELETE) {
+
+        }
+
+        itemPosition = intent.getIntExtra("position", 0);
+        //불러 온 데이터 반영
+        nameText.setText(SettingName);
+        distanceText.setText(Distance);
+        destinationText.setText(Destination);
+        timeText.setText(Time);
+        popupName.setText(SettingName);
     }
-    public void mOnClose(View v){
-        //데이터 전달하기
-        Intent intent = new Intent();
 
-        intent.putExtra("R_settingName",NameText.getText().toString());
-        intent.putExtra("R_distance",DistanceText.getText().toString());
-        intent.putExtra("R_destination", DestinationText.getText().toString());
-        intent.putExtra("R_time", TimeText.getText().toString());
-        intent.putExtra("R_ItemPosition", ItemPosition);
+    public void mOnClose(View v) {
+        //데이터 전달하기
+
+        intent.putExtra("settingName", nameText.getText().toString());
+        intent.putExtra("distance", distanceText.getText().toString());
+        intent.putExtra("destination", destinationText.getText().toString());
+        intent.putExtra("time", timeText.getText().toString());
+        intent.putExtra("itemPosition", itemPosition);
 
         setResult(RESULT_OK, intent);
 
         //액티비티(팝업) 닫기
         finish();
     }
-    public void Delete(View v){
+
+    public void Delete(View v) {
         Intent intent = new Intent();
+        intent.putExtra("itemPosition", itemPosition);
 
-        intent.putExtra("R_ItemPosition",ItemPosition);
-
-        setResult(RESULT_CANCELED,intent);
+        setResult(RESULT_CANCELED, intent);
         finish();
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //바깥레이어 클릭시 안닫히게
-        if(event.getAction()==MotionEvent.ACTION_OUTSIDE){
-            return false;
-        }
-        return true;
+        return event.getAction() != MotionEvent.ACTION_OUTSIDE;
     }
 
     @Override

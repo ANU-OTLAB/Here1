@@ -1,8 +1,8 @@
 package com.otlab.here;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class DeveloperActivity extends AppCompatActivity {
     // 4명이름 띄워주는 액티비티
@@ -11,4 +11,5 @@ public class DeveloperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_developer);
     }
+
 }
