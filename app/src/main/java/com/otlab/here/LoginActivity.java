@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,7 +41,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             public void onClick(View v) {
                 if (validationCheck()) {
                     if (requestSave()) {
-                        goMain();
+                        //goMain();
+                        String msg = new MessageThread("http://iclab.andong.ac.kr/here/login.jsp").getMessge();
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                     } else {
                         //가입되지 않은 사용자 임을 출력 하거나 오류 출력
                     }
