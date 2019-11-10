@@ -7,20 +7,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity implements Serializable {
+public class LoginActivity extends AppCompatActivity {
 
+    String msg = null;
+    String name;
     private EditText idText;
-    private EditText pwdText;
+    private EditText pwText;
     private CheckBox checkBox;
     private Button loginBtn;
     private Button joinBtn;
-
     private SharedPreferences appData;
 
     @Override
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         // view 불러오기
         idText = findViewById(R.id.idText);
-        pwdText = findViewById(R.id.pwdText);
+        pwText = findViewById(R.id.pwdText);
         checkBox = findViewById(R.id.checkBox);
         loginBtn = findViewById(R.id.loginBtn);
         joinBtn = findViewById(R.id.joinBtn);
@@ -40,10 +41,21 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 if (validationCheck()) {
-                    if (requestSave()) {
-                        //goMain();
-                        String msg = new MessageThread("http://iclab.andong.ac.kr/here/login.jsp").getMessge();
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                    if (requestValidationCheck()) {
+
+                        // SharedPreferences 객체만으론 저장 불가능 Editor 사용
+                        appData = getSharedPreferences("appData", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = appData.edit();
+
+                        // 에디터객체.put타입( 저장시킬 이름, 저장시킬 값 )
+                        // 저장시킬 이름이 이미 존재하면 덮어씌움
+                        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
+                        editor.putString("ID", idText.getText().toString().trim());
+                        //editor.putString("NAME", "");
+
+                        // apply, commit 을 안하면 변경된 내용이 저장되지 않음
+                        editor.apply();
+                        goMain();
                     } else {
                         //가입되지 않은 사용자 임을 출력 하거나 오류 출력
                     }
@@ -67,25 +79,26 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     private void goJoin() {
-        startActivity(new Intent(getApplication(), JoinActivity.class).putExtra("login", this));
+        startActivity(new Intent(getApplication(), JoinActivity.class));
+        finish();
     }
 
     // 서버에 id, pw를 전송 후 로그인 성공여부와 사용자 이름을 불러 옴
-    private boolean requestSave() {
-
-        // SharedPreferences 객체만으론 저장 불가능 Editor 사용
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
-        SharedPreferences.Editor editor = appData.edit();
-
-        // 에디터객체.put타입( 저장시킬 이름, 저장시킬 값 )
-        // 저장시킬 이름이 이미 존재하면 덮어씌움
-        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
-        editor.putString("ID", idText.getText().toString().trim());
-        //editor.putString("NAME", "");
-
-        // apply, commit 을 안하면 변경된 내용이 저장되지 않음
-        editor.apply();
-
+    private boolean requestValidationCheck() {
+        try {
+            ArrayList<String> sendMsg = new ArrayList();
+            sendMsg.add("id");
+            sendMsg.add(idText.getText().toString());
+            sendMsg.add("pw");
+            sendMsg.add(pwText.getText().toString());
+            MessageThread messageThread = new MessageThread(sendMsg, msg, "http://iclab.andong.ac.kr/here/login.jsp");
+            msg = (String) messageThread.execute().get();
+        } catch (Exception e) {
+        }
+        if(msg.equals("LOGIN_FAILED"))
+            return false;
+        String msgList[] = msg.split("<br/>");
+        name = msgList[1];
         return true;
     }
 
