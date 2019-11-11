@@ -48,7 +48,7 @@ public class ListViewCustomAdapter extends BaseAdapter {
         DestinationText.setText(arrayList.get(position).getDestination());
 
         TextView TimeText = convertView.findViewById(R.id.Time);
-        TimeText.setText(arrayList.get(position).getTime());
+        TimeText.setText(arrayList.get(position).getValidity());
 
         return convertView;
     }

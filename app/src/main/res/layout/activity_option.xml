@@ -57,7 +57,7 @@
 
     <!-- 기본적으로 설정되는 km를 결정하는 버튼 -->
     <Button
-        android:id="@+id/Option_Set"
+        android:id="@+id/alarm"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_margin="10dp"
@@ -70,7 +70,7 @@
 
     <!--개발자 소개 + popup창으로 뜨게 해보려고 함 or Textview -->
     <Button
-        android:id="@+id/Friend_Set"
+        android:id="@+id/friend"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_margin="10dp"
@@ -82,7 +82,7 @@
         android:textSize="14sp" />
 
     <Button
-        android:id="@+id/intro"
+        android:id="@+id/developer"
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:layout_margin="10dp"

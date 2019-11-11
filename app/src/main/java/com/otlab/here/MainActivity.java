@@ -2,47 +2,75 @@ package com.otlab.here;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
 
-public class MainActivity extends AppCompatActivity implements Serializable {
+public class MainActivity extends AppCompatActivity {
+
+    ImageView mapImg;
+    TextView optText;
+    TextView setText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(getApplicationContext(), SettingItem.ServiceType.UPDATE+"ㅅㄷㄴㅅ", Toast.LENGTH_SHORT).show();
 
-
+        loadView();
+        setListener();
     }
 
-    public void showMap(View view) {
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            //GPS 설정화면으로 이동
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            intent.addCategory(Intent.CATEGORY_DEFAULT);
-            startActivity(intent);
-        } else {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-
-        }
+    private void loadView() {
+        mapImg = findViewById(R.id.mapImg);
+        optText = findViewById(R.id.optText);
+        setText = findViewById(R.id.setText);
     }
 
-    public void goSetting(View view) {
-        startActivity(new Intent(getApplication(), SettingActivity.class));
-    }
+    private void setListener() {
+        //맵으로 가기
+        mapImg.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            //GPS 설정화면으로 이동
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            intent.addCategory(Intent.CATEGORY_DEFAULT);
+                            startActivity(intent);
+                        } else {
+                            startActivity(new Intent(getApplication(), MapActivity.class));
 
-    public void goOption(View view) {
-        startActivity(new Intent(getApplication(), OptionActivity.class).putExtra("main", this));
+                        }
+                    }
+                }
+        );
+        //옵션으로 가기
+        optText.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getApplication(), OptionActivity.class));
+                    }
+                }
+        );
+        //세팅으로 가기
+        setText.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getApplication(), SettingActivity.class));
+                    }
+                }
+        );
     }
 /*
     try {

@@ -5,12 +5,12 @@ public class SettingItem {
     private String settingName;
     private String distance;
     private String destination;
-    private String time;
-    public SettingItem(String settingName, String distance, String destination, String time) {
+    private String validity;
+    public SettingItem(String settingName, String distance, String destination, String validity) {
         this.settingName = settingName;
         this.distance = distance;
         this.destination = destination;
-        this.time = time;
+        this.validity = validity;
     }
 
     public String getSettingName() {
@@ -27,10 +27,10 @@ public class SettingItem {
 
     public void setDestination(String destination) { this.destination = destination; }
 
-    public String getTime() { return time; }
+    public String getValidity() { return validity; }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setValidity(String validity) {
+        this.validity = validity;
     }
 
     public enum ServiceType {

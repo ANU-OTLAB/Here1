@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 public class SplashActivity extends Activity {
 
-    private boolean saveLoginData;
+    private boolean autoLogin;
     private String name;
 
     private SharedPreferences appData;
@@ -18,31 +18,29 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_splash);
 
+        //자동 로그인 여부 확인
         load();
 
-        // 이전에 로그인 정보를 저장시킨 기록이 있다면
-        if (saveLoginData) {
+        if (autoLogin) {
             Toast.makeText(getApplicationContext(), name+"님 환영합니다.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(getApplication(), MainActivity.class));
             finish();
         } else {
             startActivity(new Intent(getApplication(), LoginActivity.class));
-            //finish();
+            finish();
         }
 
     }
 
+    //뒤로가기 버튼 방지
     @Override
     public void onBackPressed() {
-
     }
 
-    // 설정값을 불러오는 함수
+    // 설정값을 불러오는 함수(자동 로그인 여부, 이름)
     private void load() {
-        // SharedPreferences 객체.get타입( 저장된 이름, 기본값 )
-        // 저장된 이름이 존재하지 않을 시 기본값
         appData = getSharedPreferences("appData", MODE_PRIVATE);
-        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
+        autoLogin = appData.getBoolean("SAVE_LOGIN_DATA", false);
         name = appData.getString("NAME", "");
     }
 }

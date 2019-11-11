@@ -6,97 +6,101 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class SettingPopupActivity extends Activity {
 
     Intent intent;
     SettingItem.ServiceType serviceType;
+    int itemPosition;
 
     TextView nameText;
     TextView distanceText;
     TextView destinationText;
-    TextView timeText;
+    TextView validityText;
     TextView popupName;
-    int itemPosition;
+    Button okBtn;
+    Button cancelBtn;
 
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup_setting);
 
-        //view 불러 오기
-        nameText = findViewById(R.id.SetName);
-        distanceText = findViewById(R.id.SetDistance);
-        destinationText = findViewById(R.id.SetDestination);
-        timeText = findViewById(R.id.SetTime);
-        popupName = findViewById(R.id.PopupName);
-
-        //데이터 가져오기
-        intent = getIntent();
-        serviceType = (SettingItem.ServiceType) intent.getSerializableExtra("service");
-
-        String SettingName = "";
-        String Distance = "";
-        String Destination = "";
-        String Time = "";
-        //service 생성 시
-        if (serviceType == SettingItem.ServiceType.CREATE) {
-
-        }
-        //service 수정 시
-        if (serviceType == SettingItem.ServiceType.UPDATE) {
-            SettingName = intent.getStringExtra("settingName");
-            Distance = intent.getStringExtra("distance");
-            Destination = intent.getStringExtra("destination");
-            Time = intent.getStringExtra("time");
-        }
-        //service 삭제 시
-        if (serviceType == SettingItem.ServiceType.DELETE) {
-
-        }
-
-        itemPosition = intent.getIntExtra("position", 0);
-        //불러 온 데이터 반영
-        nameText.setText(SettingName);
-        distanceText.setText(Distance);
-        destinationText.setText(Destination);
-        timeText.setText(Time);
-        popupName.setText(SettingName);
+        loadView();
+        setListener();
     }
 
-    public void mOnClose(View v) {
-        //데이터 전달하기
+    //view 불러 오기
+    private void loadView(){
+        //View 객체 불러오기
+        nameText = findViewById(R.id.setName);
+        distanceText = findViewById(R.id.setDistance);
+        destinationText = findViewById(R.id.setDestination);
+        validityText = findViewById(R.id.setValidity);
+        popupName = findViewById(R.id.popupName);
+        okBtn = findViewById(R.id.ok);
+        cancelBtn = findViewById(R.id.cancel);
 
+        //intent 및 serviceType을 불러 옴
+        intent = getIntent();
+        itemPosition = intent.getIntExtra("itemPosition", 0);
+        serviceType = (SettingItem.ServiceType) intent.getSerializableExtra("service");
+        //intent를 통해 view의 text 값 초기화
+        nameText.setText(intent.getStringExtra("settingName"));
+        distanceText.setText(intent.getStringExtra("distance"));
+        destinationText.setText(intent.getStringExtra("destination"));
+        validityText.setText(intent.getStringExtra("time"));
+        popupName.setText(intent.getStringExtra("settingName"));
+
+        if(serviceType == SettingItem.ServiceType.UPDATE){
+            okBtn.setText("저장");
+            cancelBtn.setText("삭제");
+        }
+    }
+    private void setListener(){
+        //ok버튼 리스너
+        okBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        save();
+                    }
+                }
+        );
+        //cancel버튼 리스너
+        cancelBtn.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setResult(RESULT_CANCELED, intent);
+                        finish();
+                    }
+                }
+        );
+    }
+
+    public void save() {
+        //데이터 전달하기 후 종료
         intent.putExtra("settingName", nameText.getText().toString());
         intent.putExtra("distance", distanceText.getText().toString());
         intent.putExtra("destination", destinationText.getText().toString());
-        intent.putExtra("time", timeText.getText().toString());
+        intent.putExtra("validity", validityText.getText().toString());
         intent.putExtra("itemPosition", itemPosition);
 
         setResult(RESULT_OK, intent);
-
-        //액티비티(팝업) 닫기
         finish();
     }
 
-    public void Delete(View v) {
-        Intent intent = new Intent();
-        intent.putExtra("itemPosition", itemPosition);
-
-        setResult(RESULT_CANCELED, intent);
-        finish();
-    }
-
+    //바깥레이어 클릭시 안닫히게
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //바깥레이어 클릭시 안닫히게
         return event.getAction() != MotionEvent.ACTION_OUTSIDE;
     }
 
     @Override
     public void onBackPressed() {
-        //안드로이드 백버튼 막기
         return;
     }
 }

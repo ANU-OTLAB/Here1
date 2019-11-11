@@ -10,67 +10,27 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String msg = null;
-    String name;
+    String msgReceiveFromServer = null;
+    String name; //SharedPreferences.Editor 객체 중복 생성을 방지하기 위해 임시로 저장
+    private SharedPreferences appData;
+
     private EditText idText;
     private EditText pwText;
     private CheckBox checkBox;
     private Button loginBtn;
     private Button joinBtn;
-    private SharedPreferences appData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // view 불러오기
-        idText = findViewById(R.id.idText);
-        pwText = findViewById(R.id.pwdText);
-        checkBox = findViewById(R.id.checkBox);
-        loginBtn = findViewById(R.id.loginBtn);
-        joinBtn = findViewById(R.id.joinBtn);
-
-        //button 클릭 리스너
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validationCheck()) {
-                    if (requestValidationCheck()) {
-
-                        // SharedPreferences 객체만으론 저장 불가능 Editor 사용
-                        appData = getSharedPreferences("appData", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = appData.edit();
-
-                        // 에디터객체.put타입( 저장시킬 이름, 저장시킬 값 )
-                        // 저장시킬 이름이 이미 존재하면 덮어씌움
-                        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
-                        editor.putString("ID", idText.getText().toString().trim());
-                        //editor.putString("NAME", "");
-
-                        // apply, commit 을 안하면 변경된 내용이 저장되지 않음
-                        editor.apply();
-                        goMain();
-                    } else {
-                        //가입되지 않은 사용자 임을 출력 하거나 오류 출력
-                    }
-                } else {
-                    //유효하지 않은 id, pw이라 출력
-                }
-            }
-        });
-
-        joinBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goJoin();
-            }
-        });
+        loadView();
+        setListener();
     }
 
     private void goMain() {
@@ -91,18 +51,64 @@ public class LoginActivity extends AppCompatActivity {
             sendMsg.add(idText.getText().toString());
             sendMsg.add("pw");
             sendMsg.add(pwText.getText().toString());
-            MessageThread messageThread = new MessageThread(sendMsg, msg, "http://iclab.andong.ac.kr/here/login.jsp");
-            msg = (String) messageThread.execute().get();
+
+            //new MessageThread(보낼 메시지 ArrayList<String>, 받을 메세지 객체, 주소스트링)
+            MessageThread messageThread = new MessageThread(sendMsg, msgReceiveFromServer, "http://iclab.andong.ac.kr/here/login.jsp");
+            msgReceiveFromServer = (String) messageThread.execute().get();
         } catch (Exception e) {
         }
-        if(msg.equals("LOGIN_FAILED"))
+
+        if(msgReceiveFromServer.equals("LOGIN_FAILED"))
             return false;
-        String msgList[] = msg.split("<br/>");
+
+        //이름 추출
+        String msgList[] = msgReceiveFromServer.split("<br/>");
         name = msgList[1];
+
         return true;
     }
 
-    private boolean validationCheck() {
-        return true;
+    // view 불러오기
+    private void loadView(){
+        idText = findViewById(R.id.idText);
+        pwText = findViewById(R.id.pwdText);
+        checkBox = findViewById(R.id.checkBox);
+        loginBtn = findViewById(R.id.loginBtn);
+        joinBtn = findViewById(R.id.joinBtn);
     }
+
+    private void setListener(){
+        //loginButton 클릭 리스너
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //서버와의 통신 확인
+                if (requestValidationCheck()) {
+
+                    // SharedPreferences 객체만으론 저장 불가능 Editor 사용
+                    appData = getSharedPreferences("appData", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = appData.edit();
+
+                    editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
+                    editor.putString("ID", idText.getText().toString().trim());
+                    editor.putString("NAME", name);
+
+                    // apply, commit 을 안하면 변경된 내용이 저장되지 않음
+                    editor.apply();
+                    goMain();
+                } else {
+                    //가입되지 않은 사용자 임을 출력 하거나 오류 출력
+                }
+            }
+        });
+
+        //joinButton 클릭 리스너
+        joinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goJoin();
+            }
+        });
+    }
+
 }

@@ -26,40 +26,11 @@ public class JoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
-        nameText = findViewById(R.id.name);
-        phText = findViewById(R.id.ph);
-        idText = findViewById(R.id.id);
-        pwText = findViewById(R.id.pw);
-        submitButton = findViewById(R.id.submit);
-
-        nameText.setText("이기훈");
-        phText.setText("010-5393-3752");
-        idText.setText("raindrop5393");
-        pwText.setText("qwer1234!");
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (checkValidation()) {
-                        Toast.makeText(getApplicationContext(), "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplication(), SplashActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "회원가입 실패!", Toast.LENGTH_SHORT).show();
-
-                    }
-                } catch (Exception e) {
-                    Log.d("!!!!!", e.toString());
-                }
-
-            }
-        });
-
-
+        loadView();
+        setListener();
     }
 
-    private boolean checkValidation() {
+    private boolean connectServer() {
         if (nameText.length() != 0 && phText.length() != 0 && idText.length() != 0 && pwText.length() != 0)
             try {
                 ArrayList<String> sendMsg = new ArrayList();
@@ -80,5 +51,37 @@ public class JoinActivity extends AppCompatActivity {
         if(msg.equals("JOIN_SUCCESS"))
             return true;
         return false;
+    }
+    private void loadView(){
+        nameText = findViewById(R.id.name);
+        phText = findViewById(R.id.ph);
+        idText = findViewById(R.id.id);
+        pwText = findViewById(R.id.pw);
+        submitButton = findViewById(R.id.submit);
+
+        nameText.setText("이기훈");
+        phText.setText("010-5393-3752");
+        idText.setText("raindrop5393");
+        pwText.setText("qwer1234!");
+    }
+    private void setListener(){
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (connectServer()) {
+                        Toast.makeText(getApplicationContext(), "회원가입 성공!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplication(), SplashActivity.class));
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "회원가입 실패!", Toast.LENGTH_SHORT).show();
+
+                    }
+                } catch (Exception e) {
+                    Log.d("!!!!!", e.toString());
+                }
+
+            }
+        });
     }
 }
