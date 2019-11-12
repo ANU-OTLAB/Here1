@@ -9,10 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class CreateFriendActivity extends AppCompatActivity {
+
     TextView id;
     TextView name;
     Button newfriendbtn;
     int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class CreateFriendActivity extends AppCompatActivity {
         name = (TextView)findViewById(R.id.NewFriendName);
 
         //((FriendActivity)FriendActivity.mContext). 하면 FriendActivity 에있는 것들 사용가능
-        ((FriendActivity)FriendActivity.mContext).customAdapter.itemadd(id.getText().toString(),name.getText().toString());
+       // ((FriendActivity)FriendActivity.).customAdapter.itemadd(id.getText().toString(),name.getText().toString());
         finish();
     }
 }
