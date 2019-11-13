@@ -36,4 +36,7 @@ public class SettingItem {
     public enum ServiceType {
         CREATE, UPDATE, DELETE
     }
+    public enum DestinationType{
+        PERSON, PLACE, UNKNOWN
+    }
 }

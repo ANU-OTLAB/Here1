@@ -32,7 +32,8 @@ public class SettingActivity extends Activity {
         setListener();
 
     }
-    private void initList(){
+
+    private void initList() {
         settingItemListView = findViewById(R.id.setList);
         createButton = findViewById(R.id.Createlist);
         settingItemList = new ArrayList<>();
@@ -43,25 +44,27 @@ public class SettingActivity extends Activity {
         listSize = appData.getInt("listSize", 0);
 
         for (int i = 0; i < listSize; i++) {
-            settingItemList.add(new SettingItem(appData.getString("name" + i, ""), appData.getString("distance" + i, ""), appData.getString("destination" + i, ""), appData.getString("time" + i, "")));
+            settingItemList.add(new SettingItem(appData.getString("settingName" + i, ""), appData.getString("distance" + i, ""), appData.getString("destination" + i, ""), appData.getString("validity" + i, "")));
         }
 
         customAdapter = new ListViewCustomAdapter(this, R.layout.listview_item, settingItemList);
         settingItemListView.setAdapter(customAdapter);
     }
-    private void setListener(){
+
+    private void setListener() {
         //listview 아이템 클릭 시 수정, 삭제 팝업
         settingItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), SettingPopupActivity.class);
 
-                intent.putExtra("settingName", settingItemList.get(position).getSettingName());
-                intent.putExtra("distance", settingItemList.get(position).getDistance());
-                intent.putExtra("destination", settingItemList.get(position).getDestination());
-                intent.putExtra("time", settingItemList.get(position).getValidity());
-                intent.putExtra("itemPosition", position);
-                intent.putExtra("service", SettingItem.ServiceType.UPDATE);
+                intent.putExtra("settingName", settingItemList.get(position).getSettingName())
+                        .putExtra("distance", settingItemList.get(position).getDistance())
+                        .putExtra("destination", settingItemList.get(position).getDestination())
+                        .putExtra("validity", settingItemList.get(position).getValidity())
+                        .putExtra("itemPosition", position)
+                        .putExtra("service", SettingItem.ServiceType.UPDATE)
+                        .putExtra("destinationType", SettingItem.DestinationType.UNKNOWN);
 
                 startActivityForResult(intent, 1);
             }
@@ -77,12 +80,13 @@ public class SettingActivity extends Activity {
                 startActivityForResult(intent, 1);
             }
         });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         SettingItem.ServiceType serviceType = (SettingItem.ServiceType) data.getSerializableExtra("service");
-        //예의상 놔둠(없어도 됨)
+        //requestCode 확인... 예의상 놔둠(없어도 됨)
         if (requestCode == 1) {
             //PopupActivity에서 확인,저장 버튼 눌렀을 때
             if (resultCode == RESULT_OK) {
@@ -99,11 +103,11 @@ public class SettingActivity extends Activity {
                     settingItemList.add(settingItem);
                     customAdapter.notifyDataSetChanged();
                     //추가 된 데이터 폰에 저장
-                    editor.putString("name" + listSize, name);
-                    editor.putString("distance" + listSize, distance);
-                    editor.putString("destination" + listSize, destination);
-                    editor.putString("validity" + listSize, validity);
-                    editor.putInt("listSize", ++listSize);
+                    editor.putString("name" + listSize, name)
+                            .putString("distance" + listSize, distance)
+                            .putString("destination" + listSize, destination)
+                            .putString("validity" + listSize, validity)
+                            .putInt("listSize", ++listSize);
 
                 }
                 if (serviceType == SettingItem.ServiceType.UPDATE) {
@@ -114,10 +118,10 @@ public class SettingActivity extends Activity {
                     settingItemList.get(itemPosition).setValidity(validity);
                     customAdapter.notifyDataSetChanged();
                     //변경 된 데이터 폰에 저장
-                    editor.putString("name" + itemPosition, name);
-                    editor.putString("distance" + itemPosition, distance);
-                    editor.putString("destination" + itemPosition, destination);
-                    editor.putString("validity" + itemPosition, validity);
+                    editor.putString("name" + itemPosition, name)
+                            .putString("distance" + itemPosition, distance)
+                            .putString("destination" + itemPosition, destination)
+                            .putString("validity" + itemPosition, validity);
 
                 }
 
@@ -128,17 +132,17 @@ public class SettingActivity extends Activity {
                     customAdapter.notifyDataSetChanged();
                     //저장 된 데이터 한 칸씩 앞으로
                     for (int i = deleteposition; i < listSize - 1; i++) {
-                        editor.putString("name" + i, appData.getString("name" + (i + 1), ""));
-                        editor.putString("distance" + i, appData.getString("distance" + (i + 1), ""));
-                        editor.putString("destination" + i, appData.getString("destination" + (i + 1), ""));
-                        editor.putString("time" + i, appData.getString("time" + (i + 1), ""));
+                        editor.putString("name" + i, appData.getString("name" + (i + 1), ""))
+                                .putString("distance" + i, appData.getString("distance" + (i + 1), ""))
+                                .putString("destination" + i, appData.getString("destination" + (i + 1), ""))
+                                .putString("time" + i, appData.getString("validity" + (i + 1), ""));
                     }
                     //마지막 저장 된 데이터 지우기
-                    editor.remove("name" + (listSize - 1));
-                    editor.remove("distance" + (listSize - 1));
-                    editor.remove("destination" + (listSize - 1));
-                    editor.remove("time" + (listSize - 1));
-                    editor.putInt("listSize", listSize - 1);
+                    editor.remove("name" + (listSize - 1))
+                            .remove("distance" + (listSize - 1))
+                            .remove("destination" + (listSize - 1))
+                            .remove("validity" + (listSize - 1))
+                            .putInt("listSize", listSize - 1);
                 }
             }
             editor.apply();

@@ -74,6 +74,7 @@ public class OptionActivity extends Activity {
     }
 
     private void logout() {
+        //로그아웃 확인창과 그 메세지
         new AlertDialog.Builder(OptionActivity.this)
                 .setTitle("로그아웃")
                 .setMessage("로그아웃 하시겠습니까?\n로그아웃 시 저장 된 알람이 삭제됩니다.\n(취소 시 돌아감)")

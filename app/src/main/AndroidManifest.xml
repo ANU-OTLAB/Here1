@@ -30,11 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmSettingActivity"/>
-        <activity android:name=".CreateFriendActivity"/>
-        <activity android:name=".DeveloperActivity"/>
-        <activity android:name=".FriendActivity"/>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".AlarmSettingActivity" />
+        <activity android:name=".CreateFriendActivity" />
+        <activity android:name=".DeveloperActivity" />
+        <activity android:name=".FriendActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".JoinActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".MapActivity" />
@@ -44,6 +44,8 @@
             android:name=".SettingPopupActivity"
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".MapViewActivity" />
+        <activity android:name=".FriendSelectActivity" ></activity>
+        <activity android:name=".TestActivity" />
     </application>
 
 </manifest>

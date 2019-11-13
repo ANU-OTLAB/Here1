@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.Serializable;
-
 public class MainActivity extends AppCompatActivity {
 
     ImageView mapImg;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.addCategory(Intent.CATEGORY_DEFAULT);
                             startActivity(intent);
                         } else {
-                            startActivity(new Intent(getApplication(), MapViewActivity.class));
+                            startActivity(new Intent(getApplication(), MapActivity.class));
 
                         }
                     }

@@ -26,11 +26,18 @@
                 android:hint="id를 입력하세요." />
 
             <Button
-                android:id="@+id/request"
+                android:id="@+id/addrequest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="친구추가" />
+
+            <Button
+                android:id="@+id/delrequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="친구삭제" />
 
         </LinearLayout>
 
