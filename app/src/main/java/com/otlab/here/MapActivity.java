@@ -27,10 +27,10 @@ public class MapActivity extends Activity {
 
     ViewGroup mapViewContainer;
     private MapView mapView;
-    private MapPoint myMapPoint;
-    private MapPoint desMapPoint;
+    private MapPoint myLocation;
+    private MapPoint destinationLocation;
     private MapPOIItem myMarker;
-    private MapPOIItem[] desMarker = new MapPOIItem[1];
+    private MapPOIItem[] destinationMarker = new MapPOIItem[1];
     private Location location;
     private Handler handler;
 
@@ -43,59 +43,68 @@ public class MapActivity extends Activity {
         handler = new Handler();
 
         try {
+            if (checkPermission()) {
+                requestPermission();
+                finish();
+            }
 
-
-            if (Build.VERSION.SDK_INT >= 23
-                    && ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-            } else {
-
-
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, gpsLocationListener);
 
-                myMapPoint = MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude());
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                myLocation = MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude());
 
                 mapView = new MapView(this);
                 mapViewContainer = findViewById(R.id.map_view);
-                mapView.setMapCenterPoint(myMapPoint, false);
+
+                mapView.setMapCenterPoint(myLocation, false);
                 mapViewContainer.addView(mapView);
 
 
                 myMarker = new MapPOIItem();
-                newMarker("내 위치", myMapPoint, mapView, myMarker);
+                newMarker("내 위치", myLocation, mapView, myMarker);
                 //독일마을 좌표
-                desMapPoint = MapPoint.mapPointWithGeoCoord(36.54575536601466, 128.7950717506389);
+                destinationLocation = MapPoint.mapPointWithGeoCoord(36.54575536601466, 128.7950717506389);
                 //커스텀마커//
-                desMarker[0] = new MapPOIItem();
-                desMarker[0].setItemName("커스텀 마커"); // 마커이름
-                desMarker[0].setMapPoint(desMapPoint); // 마커좌표
-                desMarker[0].setMarkerType(MapPOIItem.MarkerType.CustomImage); //마커를 커스텀마커 타입으로 선언
-                desMarker[0].setCustomImageResourceId(R.drawable.whoami); //마커에 사용할 이미지 넣기
-                mapView.addPOIItem(desMarker[0]); // 맵에 표시
+                destinationMarker[0] = new MapPOIItem();
+                destinationMarker[0].setItemName("커스텀 마커"); // 마커이름
+                destinationMarker[0].setMapPoint(destinationLocation); // 마커좌표
+                destinationMarker[0].setMarkerType(MapPOIItem.MarkerType.CustomImage); //마커를 커스텀마커 타입으로 선언
+                destinationMarker[0].setCustomImageResourceId(R.drawable.whoami); //마커에 사용할 이미지 넣기
+                mapView.addPOIItem(destinationMarker[0]); // 맵에 표시
                 //////////////
                 //원그리기//
-                MapCircle circle = new MapCircle(desMapPoint, 50, Color.argb(128,255,0,0), Color.argb(128,0,255,0));
+                MapCircle circle = new MapCircle(destinationLocation, 50, Color.argb(128,255,0,0), Color.argb(128,0,255,0));
                 // 원그리기 (중심의 좌표, 반지름, 선의 색깔, 원안에 색깔)
                 mapView.addCircle(circle); // 맵에 표시
                 ////////////
-                double distance = calculate(myMapPoint.getMapPointGeoCoord().latitude, myMapPoint.getMapPointGeoCoord().longitude, desMapPoint.getMapPointGeoCoord().latitude, desMapPoint.getMapPointGeoCoord().longitude);// 좌표사이의 거리계산
+                double distance = calculate(myLocation.getMapPointGeoCoord().latitude, myLocation.getMapPointGeoCoord().longitude, destinationLocation.getMapPointGeoCoord().latitude, destinationLocation.getMapPointGeoCoord().longitude);// 좌표사이의 거리계산
                 // distance를 int형으로 타입캐스팅후 30m안으로 가까이 올때 백그라운드 작업 시작
                 if((int)distance < 30){
                     OneTimeWorkRequest testwork = new OneTimeWorkRequest.Builder(BackGroundWorker.class).build(); // 아무런 제약 조건없이 백그라운드 work 생성
                     WorkManager.getInstance().enqueue(testwork); // 생성된 work를 queue에 넣으면 폰이 알아서 시작
                 }
 
-            }
+
         } catch (Exception e) {
             this.recreate();
             Log.d("??", e.getMessage());
             Toast.makeText(getApplicationContext(), "GPS 연결에 실패하였습니다.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean checkPermission(){
+        if(Build.VERSION.SDK_INT >= 23
+                && ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            return true;
+        return false;
+    }
+
+    private void requestPermission(){
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
     }
 
     final LocationListener gpsLocationListener = new LocationListener() {
@@ -117,7 +126,7 @@ public class MapActivity extends Activity {
         try {
             myMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()));
 
-            Task task = new Task(handler, myMarker, desMarker);
+            Task task = new Task(handler, myMarker, destinationMarker);
             task.execute();
 
         } catch (Exception e) {

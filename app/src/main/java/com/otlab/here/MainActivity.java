@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.addCategory(Intent.CATEGORY_DEFAULT);
                             startActivity(intent);
                         } else {
-                            startActivity(new Intent(getApplication(), MapActivity.class));
+                            startActivity(new Intent(getApplication(), MapViewActivity.class));
 
                         }
                     }

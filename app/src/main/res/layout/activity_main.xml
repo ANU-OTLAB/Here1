@@ -16,7 +16,7 @@
         android:background="@drawable/main_border"
         android:gravity="center|start"
         android:singleLine="false"
-        android:text="Here"
+        android:text="다와가"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textIsSelectable="false"

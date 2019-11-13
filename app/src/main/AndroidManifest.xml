@@ -43,6 +43,7 @@
         <activity
             android:name=".SettingPopupActivity"
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".MapViewActivity" />
     </application>
 
 </manifest>
