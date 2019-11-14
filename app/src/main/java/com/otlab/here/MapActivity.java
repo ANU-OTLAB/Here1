@@ -82,8 +82,8 @@ public class MapActivity extends Activity {
                 double distance = calculate(myLocation.getMapPointGeoCoord().latitude, myLocation.getMapPointGeoCoord().longitude, destinationLocation.getMapPointGeoCoord().latitude, destinationLocation.getMapPointGeoCoord().longitude);// 좌표사이의 거리계산
                 // distance를 int형으로 타입캐스팅후 30m안으로 가까이 올때 백그라운드 작업 시작
                 if((int)distance < 30){
-                    OneTimeWorkRequest testwork = new OneTimeWorkRequest.Builder(BackGroundWorker.class).build(); // 아무런 제약 조건없이 백그라운드 work 생성
-                    WorkManager.getInstance().enqueue(testwork); // 생성된 work를 queue에 넣으면 폰이 알아서 시작
+                    /*OneTimeWorkRequest testwork = new OneTimeWorkRequest.Builder(BackGroundWorker.class).build(); // 아무런 제약 조건없이 백그라운드 work 생성
+                    WorkManager.getInstance().enqueue(testwork); // 생성된 work를 queue에 넣으면 폰이 알아서 시작*/
                 }
 
 
@@ -125,9 +125,6 @@ public class MapActivity extends Activity {
     private void refreshPosition() {
         try {
             myMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()));
-
-            Task task = new Task(handler, myMarker, destinationMarker);
-            task.execute();
 
         } catch (Exception e) {
         }
