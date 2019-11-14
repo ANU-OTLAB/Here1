@@ -2,25 +2,38 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E8E8E8">
 
     <LinearLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#E8E8E8"
         android:gravity="center_vertical"
         android:orientation="vertical"
         tools:context="com.otlab.here.JoinActivity">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:gravity="center"
-            android:text="JOIN"></TextView>
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/title_border"
+            android:fontFamily="@font/my_font_family"
+            android:padding="20dp"
+            android:text="SIGN UP"
+            android:textColor="#000000"
+            android:textSize="20pt">></TextView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -28,6 +41,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:fontFamily="@font/my_font_family"
                 android:gravity="center"
                 android:text="이름" />
 
@@ -36,18 +50,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                android:fontFamily="@font/my_font_family"
                 android:hint="이기훈" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:fontFamily="@font/my_font_family"
                 android:inputType="textPersonName"></TextView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#E8E8E8"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -63,6 +82,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                android:fontFamily="@font/my_font_family"
                 android:hint="010-5393-3752"
                 android:maxLength="13" />
 
@@ -76,6 +96,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#E8E8E8"
+            android:fontFamily="@font/my_font_family"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -83,6 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:fontFamily="@font/my_font_family"
                 android:gravity="center"
                 android:text="ID" />
 
@@ -91,17 +116,21 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:hint="raindrop5393"/>
+                android:fontFamily="@font/my_font_family"
+                android:hint="raindrop5393" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"></TextView>
+                android:layout_weight="2"
+                android:fontFamily="@font/my_font_family"></TextView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal"
             android:weightSum="10">
 
@@ -109,6 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:fontFamily="@font/my_font_family"
                 android:gravity="center"
                 android:text="Password" />
 
@@ -117,20 +147,29 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
+                android:fontFamily="@font/my_font_family"
                 android:hint="****"
                 android:inputType="textPassword" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"></TextView>
+                android:layout_weight="2"
+                android:fontFamily="@font/my_font_family"></TextView>
         </LinearLayout>
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:id="@+id/submit"
-            android:text="제출"></Button>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/button_round_edge"
+            android:fontFamily="@font/my_font_family"
+            android:paddingLeft="150dp"
+            android:paddingRight="130dp"
+            android:text="SUBMIT"
+            android:textSize="20sp"></Button>
     </LinearLayout>
 </ScrollView>
