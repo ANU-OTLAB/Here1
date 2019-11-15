@@ -96,4 +96,9 @@ public class OptionActivity extends Activity {
                 .show();
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    }
 }

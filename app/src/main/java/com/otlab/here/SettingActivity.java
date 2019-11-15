@@ -44,7 +44,7 @@ public class SettingActivity extends Activity {
         listSize = appData.getInt("listSize", 0);
 
         for (int i = 0; i < listSize; i++) {
-            settingItemList.add(new SettingItem(appData.getString("settingName" + i, ""), appData.getString("distance" + i, ""), appData.getString("destination" + i, ""), appData.getString("validity" + i, "")));
+            settingItemList.add(new SettingItem(appData.getString("name" + i, ""), appData.getString("distance" + i, ""), appData.getString("destination" + i, ""), appData.getString("validity" + i, "")));
         }
 
         customAdapter = new ListViewCustomAdapter(this, R.layout.listview_item, settingItemList);

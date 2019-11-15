@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         startActivity(new Intent(getApplication(), OptionActivity.class));
+                        finish();
                     }
                 }
         );
