@@ -5,6 +5,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MapActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/goLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="가자왼쪽으로" />
+
+        <TextView
+            android:id="@+id/selectedSettingInformation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/goRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="가자오른쪽으로" />
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"

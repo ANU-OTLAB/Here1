@@ -17,7 +17,7 @@ public class OptionActivity extends Activity {
     Button alarmSettingButton;
     Button friendSettingButton;
     Button developerButton;
-
+    Button acceptWaitingBtn; // 수락대기목록 가는 버튼
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -33,6 +33,7 @@ public class OptionActivity extends Activity {
         alarmSettingButton = findViewById(R.id.alarm);
         friendSettingButton = findViewById(R.id.friend);
         developerButton = findViewById(R.id.developer);
+        acceptWaitingBtn = findViewById(R.id.accept);
     }
 
     private void setListener() {
@@ -69,6 +70,13 @@ public class OptionActivity extends Activity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(), DeveloperActivity.class));
+            }
+        });
+        //수락대기목록 버튼
+        acceptWaitingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), WaitingAcceptActivity.class));
             }
         });
     }

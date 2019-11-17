@@ -3,25 +3,14 @@ package com.otlab.here;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
-
 import java.util.ArrayList;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -70,18 +59,18 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
 
-        if(msgReceiveFromServer.equals("LOGIN_FAILED"))
+        if (msgReceiveFromServer.equals("LOGIN_FAILED"))
             return false;
 
         //이름 추출
-        String msgList[] = msgReceiveFromServer.split("<br/>");
+        String[] msgList = msgReceiveFromServer.split("<br/>");
         name = msgList[1];
 
         return true;
     }
 
     // view 불러오기
-    private void loadView(){
+    private void loadView() {
         idText = findViewById(R.id.idText);
         pwText = findViewById(R.id.pwdText);
         checkBox = findViewById(R.id.checkBox);
@@ -89,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         joinBtn = findViewById(R.id.joinBtn);
     }
 
-    private void setListener(){
+    private void setListener() {
         //loginButton 클릭 리스너
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

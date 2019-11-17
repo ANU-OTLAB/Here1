@@ -1,7 +1,9 @@
 package com.otlab.here;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,12 +12,14 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class SettingPopupActivity extends Activity {
 
@@ -23,6 +27,7 @@ public class SettingPopupActivity extends Activity {
     SettingItem.ServiceType serviceType;
     SettingItem.DestinationType destinationType;
     int itemPosition;
+    private SharedPreferences appData; // 나의 아이디를 가져오기 위해서 SharedPreferneces 선언
 
     TextView nameText;
     TextView distanceText;
@@ -33,7 +38,7 @@ public class SettingPopupActivity extends Activity {
     Button editBtn;
     Button okBtn;
     Button cancelBtn;
-
+    Button dateBtn;
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -55,6 +60,7 @@ public class SettingPopupActivity extends Activity {
         editBtn = findViewById(R.id.edit);
         okBtn = findViewById(R.id.ok);
         cancelBtn = findViewById(R.id.cancel);
+        dateBtn = findViewById(R.id.setVaildityBtn);
 
         //intent 및 serviceType을 불러 옴
         intent = getIntent();
@@ -96,6 +102,12 @@ public class SettingPopupActivity extends Activity {
                     }
                 }
         );
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dateView();
+            }
+        });
     }
 
     private void save() {
@@ -106,7 +118,31 @@ public class SettingPopupActivity extends Activity {
                     .putExtra("destination", destinationText.getText().toString())
                     .putExtra("validity", validityText.getText().toString())
                     .putExtra("itemPosition", itemPosition);
+            //수락 대기 목록 디비에 넘기기
+            try {
+                appData = getSharedPreferences("appData", MODE_PRIVATE);
+                String myid = appData.getString("ID", "");
+                String address = "http://iclab.andong.ac.kr/here/authorityInformationSave.jsp";
+                String recv = "";
+                ArrayList<String> sendmsg = new ArrayList<>();
+                sendmsg.add("observer");
+                sendmsg.add(myid);
+                sendmsg.add("target");
+                sendmsg.add(destinationText.getText().toString());
+                sendmsg.add("expiryDate");
+                sendmsg.add(validityText.getText().toString());
+                sendmsg.add("validity");
+                sendmsg.add("REQUEST");
 
+                MessageThread send = new MessageThread(sendmsg, recv, address);
+                String recvData = (String) send.execute().get();
+
+                Toast.makeText(getApplicationContext(), recvData, Toast.LENGTH_SHORT).show();
+            } catch(ExecutionException e){
+                e.printStackTrace();
+            } catch(InterruptedException e){
+                e.printStackTrace();
+            }
             setResult(RESULT_OK, intent);
             finish();
         } else {
@@ -137,7 +173,7 @@ public class SettingPopupActivity extends Activity {
                 if(position==0){
                     goFriendSelect();
                 }else if(position==1){
-                   goMap();
+                    goMap();
                 }
             }
             @Override
@@ -201,6 +237,23 @@ public class SettingPopupActivity extends Activity {
         return event.getAction() != MotionEvent.ACTION_OUTSIDE;
     }
 
+    private void dateView(){
+        // 날짜선택 버튼을 눌렀을때 날짜 다이얼로그를 불러오는 함수
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int day) {
+                    month++; // 해주는 이유는 무슨 이유인지는 모르겠으나 항상 고른 달보다 -1되서 나옴 인터넷에 예제들 보니깐 다 +1해주더라
+                    String date = year +"-"+ month+"-"+day;
+                    Toast.makeText(SettingPopupActivity.this, date, Toast.LENGTH_SHORT).show();// 날짜 제대로 가는지 확인해주기위해 메시지 띄움
+                    validityText.setText(date);
+                }
+            },2019,1,1/*초기상태*/);
+            datePickerDialog.setMessage("날짜 선택");//다이얼로그 이름 선언
+            datePickerDialog.show();
+
+        }
+    }
     @Override
     public void onBackPressed() {
         return;

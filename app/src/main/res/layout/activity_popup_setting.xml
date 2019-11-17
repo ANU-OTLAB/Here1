@@ -143,13 +143,19 @@
             android:text="만료기한"
             android:textColor="#FFFFFF" />
 
-        <EditText
+        <Button
+            android:id="@+id/setVaildityBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="날짜 선택" />
+
+        <TextView
             android:id="@+id/setValidity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="YYYYMMDD"
-            android:inputType="date" />
+            android:gravity="center"
+            android:hint="지정되지 않았습니다."
+            android:textSize="15sp" />
 
     </LinearLayout>
     <!-- Notice -->
