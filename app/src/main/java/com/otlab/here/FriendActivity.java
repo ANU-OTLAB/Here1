@@ -30,28 +30,28 @@ public class FriendActivity extends Activity {
         setContentView(R.layout.activity_friend);
 
         loadView();
-        setListener();
         initList();
+        setListener();
     }
 
     private void loadView() {
         friendListView = findViewById(R.id.FriendList);
-        addFriend = findViewById(R.id.addrequest);
-        delFriend = findViewById(R.id.delrequest);
-        friendIdtxt = findViewById(R.id.friendid);
+        addFriend = findViewById(R.id.addRequest);
+        delFriend = findViewById(R.id.delRequest);
+        friendIdtxt = findViewById(R.id.friendId);
     }
 
     private void setListener() {
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddFriend();
+                addFriend();
             }
         });
         delFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DelFriend();
+                delFriend();
             }
         });
     }
@@ -60,6 +60,7 @@ public class FriendActivity extends Activity {
         friendList = new ArrayList<>();
         customAdapter = new FriendListViewCustomAdapter(this, R.layout.friendlistview_item, friendList);
         friendListView.setAdapter(customAdapter);
+
         String receiveMsg = "";
         ArrayList<String> sendmsg = new ArrayList<>();
 
@@ -70,10 +71,12 @@ public class FriendActivity extends Activity {
             MessageThread send = new MessageThread(sendmsg, receiveMsg, "http://iclab.andong.ac.kr/here/friendListOutput.jsp");
             receiveMsg = (String) send.execute().get();
 
+            // "/"는 리스트 한 줄 단위 구분 " "는 이름, id, 만료기한 구분
             if (receiveMsg.length() != 0) {
-                recvData = receiveMsg.split(" ");
-                for (int i = 0; i < recvData.length; i = i + 2) {
-                    friendList.add(new FriendItem(recvData[i], recvData[i+1] ));
+                recvData = receiveMsg.split("/");
+                for (int i = 0; i < recvData.length; i++) {
+                    String[] buffer = recvData[i].split(" ");
+                    friendList.add(new FriendItem(buffer[0], buffer[1], buffer.length==3?buffer[2]:""));
                 }
             }
             customAdapter.notifyDataSetChanged();
@@ -82,7 +85,7 @@ public class FriendActivity extends Activity {
         }
     }
 
-    private void AddFriend() {
+    private void addFriend() {
         try {
             //친구추가 하기 위해 TextView에 적은 친구 이름 가져오기
             String friendId = friendIdtxt.getText().toString();
@@ -113,12 +116,12 @@ public class FriendActivity extends Activity {
         }
     }
 
-    private void DelFriend() {
+    private void delFriend() {
         try {
             // 친구삭제 성공 or 실패 반환 받기
             String msgReceiveFromServer = null;
             //친구삭제하기위해서 텍스트뷰 아이디 가져오기
-            friendIdtxt = findViewById(R.id.friendid);
+            friendIdtxt = findViewById(R.id.friendId);
             String friendId = friendIdtxt.getText().toString();
             //로그인된 나의 아이디 가져오기
             appData = getSharedPreferences("appData", MODE_PRIVATE);

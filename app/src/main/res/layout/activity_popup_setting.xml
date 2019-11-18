@@ -108,7 +108,7 @@
                     android:id="@+id/edit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="10sp"
+                    android:textSize="15sp"
                     android:text="EDIT"></Button>
                 <Spinner
                     android:id="@+id/destinationType"
@@ -118,7 +118,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/destination"
+                android:id="@+id/destinationText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

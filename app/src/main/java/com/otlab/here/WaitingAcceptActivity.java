@@ -28,7 +28,6 @@ public class WaitingAcceptActivity extends AppCompatActivity {
         waitiingAcceptListView = findViewById(R.id.waitingAcceptList);
 
         initList();
-        setListener();
     }
     private void initList(){
         try{
@@ -44,13 +43,16 @@ public class WaitingAcceptActivity extends AppCompatActivity {
             MessageThread send = new MessageThread(sendMsg, recv, address);
             recv = (String)send.execute().get();
 
-            if(recv.length()!=0) {
-                recvData = recv.split(" ");
-                for (int i = 0; i < recvData.length; i = i + 3) {
-                    if (recvData[i + 2].equals("REQUEST")) {
-                        waitingAcceptList.add(new WaitingAcceptItem(recvData[i], recvData[i + 1], recvData[i + 2]));
-                    }
+            if(recv.length()>=2) {
+                recvData = recv.split("/");
+                for (int i = 0; i < recvData.length; i++) {
+                    String[] buffer = recvData[i].split(" ");
+                    waitingAcceptList.add(new WaitingAcceptItem(buffer[i], buffer[i + 1], "REQUEST"));
                 }
+
+                setListener();
+            }else{
+                waitingAcceptList.add(new WaitingAcceptItem("", "EMPTY", ""));
             }
             customAdapter.notifyDataSetChanged();
         } catch(ExecutionException e){
@@ -63,10 +65,11 @@ public class WaitingAcceptActivity extends AppCompatActivity {
         waitiingAcceptListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent intent = new Intent(getApplicationContext(), Choose.class);
+                Intent intent = new Intent(getApplicationContext(), ChooseActivity.class);
                 intent.putExtra("requestId", waitingAcceptList.get(position).getFriendName());
                 intent.putExtra("validTime", waitingAcceptList.get(position).getTime());
                 startActivity(intent);
+                finish();
             }
         });
     }

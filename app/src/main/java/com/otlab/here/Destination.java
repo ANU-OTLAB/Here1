@@ -1,22 +1,56 @@
 package com.otlab.here;
 
-public class Destination {
-    private SettingItem.DestinationType destinationType;
-    private String[] destinationName;
-    private Position[] destinationPosition;
+import java.io.Serializable;
 
-    public Destination(SettingItem.DestinationType destinationType, String destinationName, Position destinationPosition){
-        this.destinationName = new String[1];
-        this.destinationPosition = new Position[1];
+public class Destination implements Serializable {
+    private SettingItem.DestinationType destinationType;
+    private String destinationName;
+    private Position destinationPosition;
+
+    public Destination(SettingItem.DestinationType destinationType, String destinationName, Position destinationPosition) {
         this.destinationType = destinationType;
-        this.destinationName[0] = destinationName;
-        this. destinationPosition[0] = destinationPosition;
+        this.destinationName = destinationName;
+        this.destinationPosition = destinationPosition;
     }
 
-    public class Position{
+    public Destination(SettingItem.DestinationType destinationType, String destinationName, double x, double y) {
+        this.destinationType = destinationType;
+        this.destinationName = destinationName;
+        this.destinationPosition = new Position(x, y);
+    }
+
+    public SettingItem.DestinationType getDestinationType() {
+        return destinationType;
+    }
+
+    public void setDestinationType(SettingItem.DestinationType destinationType) {
+        this.destinationType = destinationType;
+    }
+
+    public String getDestinationName() {
+        return destinationName;
+    }
+
+    public void setDestinationName(String destinationName) {
+        this.destinationName = destinationName;
+    }
+
+    public Position getDestinationPosition() {
+        return destinationPosition;
+    }
+
+    public void setDestinationPosition(Position destinationPosition) {
+        this.destinationPosition = destinationPosition;
+    }
+
+    public boolean isPlace(){return SettingItem.DestinationType.PLACE==destinationType;}
+    public boolean isPerson(){return SettingItem.DestinationType.PERSON==destinationType;}
+
+    public class Position implements Serializable{
         private double x;
         private double y;
-        public Position(double x, double y){
+
+        public Position(double x, double y) {
             this.x = x;
             this.y = y;
         }
@@ -25,16 +59,20 @@ public class Destination {
             return x;
         }
 
-        public double getY() {
-            return y;
-        }
-
         public void setX(double x) {
             this.x = x;
         }
 
+        public double getY() {
+            return y;
+        }
+
         public void setY(double y) {
             this.y = y;
+        }
+        public void SetPosition(Position position){
+            this.x = position.getX();
+            this.y = position.getY();
         }
     }
 }

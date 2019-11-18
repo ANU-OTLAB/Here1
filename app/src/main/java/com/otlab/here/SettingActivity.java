@@ -25,17 +25,17 @@ public class SettingActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstance) {
-        initList();
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_setting);
 
+        initList();
         setListener();
 
     }
 
     private void initList() {
         settingItemListView = findViewById(R.id.setList);
-        createButton = findViewById(R.id.Createlist);
+        createButton = findViewById(R.id.createList);
         settingItemList = new ArrayList<>();
 
         //on Load 데이터 불러 와서 리스트에 보여줌
@@ -44,7 +44,7 @@ public class SettingActivity extends Activity {
         listSize = appData.getInt("listSize", 0);
 
         for (int i = 0; i < listSize; i++) {
-            settingItemList.add(new SettingItem(appData.getString("name" + i, ""), appData.getString("distance" + i, "")+"M", appData.getString("destination" + i, ""), appData.getString("validity" + i, "")));
+            settingItemList.add(new SettingItem(appData.getString("name" + i, ""), appData.getString("distance" + i, "") + "M", appData.getString("destinationName" + i, ""), appData.getString("validity" + i, "")));
         }
 
         customAdapter = new ListViewCustomAdapter(this, R.layout.listview_item, settingItemList);
@@ -60,7 +60,7 @@ public class SettingActivity extends Activity {
 
                 intent.putExtra("settingName", settingItemList.get(position).getSettingName())
                         .putExtra("distance", settingItemList.get(position).getDistance())
-                        .putExtra("destination", settingItemList.get(position).getDestination())
+                        .putExtra("destinationName", settingItemList.get(position).getDestination())
                         .putExtra("validity", settingItemList.get(position).getValidity())
                         .putExtra("itemPosition", position)
                         .putExtra("service", SettingItem.ServiceType.UPDATE)
@@ -93,19 +93,26 @@ public class SettingActivity extends Activity {
 
                 String name = data.getStringExtra("settingName");
                 String distance = data.getStringExtra("distance");
-                String destination = data.getStringExtra("destination");
+                String destinationName = data.getStringExtra("destinationName");
                 String validity = data.getStringExtra("validity");
                 int itemPosition = data.getIntExtra("itemPosition", 0);
+                Destination[] destination = (Destination[])data.getSerializableExtra("destination");
+                String destinationList=destination[0].getDestinationName();
+                for(int i=1 ; i<destination.length ; i++){
+                    destinationList += " ";
+                    destinationList += destination[i].getDestinationName();
+                }
 
                 if (serviceType == SettingItem.ServiceType.CREATE) {
                     //추가된 데이터 리스트에 반영
-                    SettingItem settingItem = new SettingItem(name, distance, destination, validity);
+                    SettingItem settingItem = new SettingItem(name, distance, destinationName, validity);
                     settingItemList.add(settingItem);
                     customAdapter.notifyDataSetChanged();
                     //추가 된 데이터 폰에 저장
                     editor.putString("name" + listSize, name)
                             .putString("distance" + listSize, distance)
-                            .putString("destination" + listSize, destination)
+                            .putString("destinationName" + listSize, destinationName)
+                            .putString("destinationList" + listSize, destinationList)
                             .putString("validity" + listSize, validity)
                             .putInt("listSize", ++listSize);
 
@@ -114,13 +121,14 @@ public class SettingActivity extends Activity {
                     //변경 된 데이터 리스트에 반영
                     settingItemList.get(itemPosition).setSettingName(name);
                     settingItemList.get(itemPosition).setDistance(distance);
-                    settingItemList.get(itemPosition).setDestination(destination);
+                    settingItemList.get(itemPosition).setDestination(destinationName);
                     settingItemList.get(itemPosition).setValidity(validity);
                     customAdapter.notifyDataSetChanged();
                     //변경 된 데이터 폰에 저장
                     editor.putString("name" + itemPosition, name)
                             .putString("distance" + itemPosition, distance)
-                            .putString("destination" + itemPosition, destination)
+                            .putString("destinationName" + itemPosition, destinationName)
+                            .putString("destinationList" + itemPosition, destinationList)
                             .putString("validity" + itemPosition, validity);
 
                 }
@@ -134,13 +142,15 @@ public class SettingActivity extends Activity {
                     for (int i = deleteposition; i < listSize - 1; i++) {
                         editor.putString("name" + i, appData.getString("name" + (i + 1), ""))
                                 .putString("distance" + i, appData.getString("distance" + (i + 1), ""))
-                                .putString("destination" + i, appData.getString("destination" + (i + 1), ""))
+                                .putString("destinationName" + i, appData.getString("destinationName" + (i + 1), ""))
+                                .putString("destinationList" + i, appData.getString("destinationList" + (i + 1), ""))
                                 .putString("time" + i, appData.getString("validity" + (i + 1), ""));
                     }
                     //마지막 저장 된 데이터 지우기
                     editor.remove("name" + (listSize - 1))
                             .remove("distance" + (listSize - 1))
-                            .remove("destination" + (listSize - 1))
+                            .remove("destinationName" + (listSize - 1))
+                            .remove("destinationList" + (listSize - 1))
                             .remove("validity" + (listSize - 1))
                             .putInt("listSize", listSize - 1);
                 }

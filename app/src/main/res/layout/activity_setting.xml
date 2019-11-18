@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E8E8E8"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/setting_name"
@@ -22,7 +24,7 @@
         android:text="SETTING"
         android:textColor="#000000"
         android:textSize="20pt"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/setList"
@@ -37,16 +39,16 @@
     </ListView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/Createlist"
+        android:id="@+id/createList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/setList"
+        android:layout_alignEnd="@id/setList"
         android:layout_alignRight="@id/setList"
         android:layout_alignBottom="@id/setList"
         android:adjustViewBounds="false"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="CreateClick"
         app:backgroundTint="#B3E5FC"
         app:elevation="6dp"
         app:maxImageSize="32dp"

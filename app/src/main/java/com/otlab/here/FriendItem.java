@@ -3,24 +3,28 @@ package com.otlab.here;
 // FriendListItem을 이루는 정보
 
 public class FriendItem {
-    private String UserId;
-    private String UserName;
+    private String userId;
+    private String userName;
+    private String validity;
 
-    FriendItem(String userid, String username){
-        UserId = userid;
-        UserName = username;
+    FriendItem(String userId, String userName, String validity){
+        this.userId = userId;
+        this.userName = userName;
+        this.validity = validity;
     }
     public String getUserId() {
-        return UserId;
+        return userId;
     }
     public String getUserName() {
-        return UserName;
+        return userName;
     }
+    public String getValidity() {return validity;}
+
     public void setUserId(String userId) {
-        UserId = userId;
+        this.userId = userId;
     }
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
-
+    public void setValidity(String validity) {this.validity = validity;}
 }

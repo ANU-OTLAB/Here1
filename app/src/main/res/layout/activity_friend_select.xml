@@ -10,13 +10,13 @@
         android:id="@+id/listview1"
         android:layout_width="match_parent"
         android:layout_height="682dp"
-        android:choiceMode="multipleChoice"></ListView>
+        android:choiceMode="multipleChoice" />
 
     <Button
         android:id="@+id/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="확인"></Button>
+        android:text="확인" />
 
 </LinearLayout>
