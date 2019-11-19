@@ -7,12 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {/*check*/
 
     String msgReceiveFromServer = null;
     String name; //SharedPreferences.Editor 객체 중복 생성을 방지하기 위해 임시로 저장
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     // 서버에 id, pw를 전송 후 로그인 성공여부와 사용자 이름을 불러 옴
     private boolean requestValidationCheck() {
         try {
-            ArrayList<String> sendMsg = new ArrayList();
+            ArrayList<String> sendMsg = new ArrayList<>();
             sendMsg.add("id");
             sendMsg.add(idText.getText().toString());
             sendMsg.add("pw");
@@ -64,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
 
         //이름 추출
-        String[] msgList = msgReceiveFromServer.split("<br/>");
+        String[] msgList = msgReceiveFromServer.split("/");
         name = msgList[1];
 
         return true;
@@ -92,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = appData.edit();
 
                     id = appData.getString("id", "");
-                    if(!id.equals(idText.getText().toString().trim())){
-                        editor.clear().commit();
+                    if (!id.equals(idText.getText().toString().trim())) {
+                        editor.clear().apply();
                     }
                     editor.putBoolean("autoLogin", checkBox.isChecked());
                     editor.putString("id", idText.getText().toString().trim());
@@ -103,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                     editor.apply();
                     goMain();
                 } else {
-                    //가입되지 않은 사용자 임을 출력 하거나 오류 출력
+                    Toast.makeText(getApplicationContext(), "ID 또는 비밀번호를 확인 해 주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

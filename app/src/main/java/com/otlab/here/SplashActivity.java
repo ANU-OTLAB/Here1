@@ -6,18 +6,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends Activity {/*check*/
 
     private boolean autoLogin;
     private String name;
-
-    private SharedPreferences appData;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_splash);
-        //자동 로그인 여부 확인
+
         load();
 
         if (autoLogin) {
@@ -38,7 +36,7 @@ public class SplashActivity extends Activity {
 
     // 설정값을 불러오는 함수(자동 로그인 여부, 이름)
     private void load() {
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
+        SharedPreferences appData = getSharedPreferences("appData", MODE_PRIVATE);
         autoLogin = appData.getBoolean("autoLogin", false);
         name = appData.getString("name", "");
     }

@@ -2,7 +2,6 @@ package com.otlab.here;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +32,7 @@ public class JoinActivity extends AppCompatActivity {
     private boolean connectServer() {
         if (nameText.length() != 0 && phText.length() != 0 && idText.length() != 0 && pwText.length() != 0)
             try {
-                ArrayList<String> sendMsg = new ArrayList();
+                ArrayList<String> sendMsg = new ArrayList<>();
                 sendMsg.add("name");
                 sendMsg.add(nameText.getText().toString());
                 sendMsg.add("ph");
@@ -45,26 +44,19 @@ public class JoinActivity extends AppCompatActivity {
                 MessageThread messageThread = new MessageThread(sendMsg, msg, "http://iclab.andong.ac.kr/here/join.jsp");
                 msg = (String) messageThread.execute().get();
             } catch (Exception e) {
-                Log.d("error^^^^^^^^^", e.toString());
-                return false;
             }
-        if(msg.equals("JOIN_SUCCESS"))
-            return true;
-        return false;
+        return msg.equals("JOIN_SUCCESS");
     }
-    private void loadView(){
+
+    private void loadView() {
         nameText = findViewById(R.id.name);
         phText = findViewById(R.id.ph);
         idText = findViewById(R.id.id);
         pwText = findViewById(R.id.pw);
         submitButton = findViewById(R.id.submit);
-
-        nameText.setText("이기훈");
-        phText.setText("010-5393-3752");
-        idText.setText("raindrop5393");
-        pwText.setText("qwer1234!");
     }
-    private void setListener(){
+
+    private void setListener() {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,7 +70,6 @@ public class JoinActivity extends AppCompatActivity {
 
                     }
                 } catch (Exception e) {
-                    Log.d("!!!!!", e.toString());
                 }
 
             }

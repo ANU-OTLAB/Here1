@@ -52,6 +52,8 @@ public class SettingPopupActivity extends Activity {
 
     //view 불러 오기
     private void loadView() {
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
+
         //View 객체 불러오기
         nameText = findViewById(R.id.setName);
         distanceText = findViewById(R.id.setDistance);
@@ -110,10 +112,26 @@ public class SettingPopupActivity extends Activity {
                 dateView();
             }
         });
+
+        //스피너안의 아이템의 클릭리스너
+        destinationTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if(position==0){
+                    goFriendSelect();
+                }else if(position==1){
+                    goMap();
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
     }
 
     private void save() {
         if (inputIsValidate()) {
+
+
             //데이터 전달하기 후 종료
             intent.putExtra("settingName", nameText.getText().toString())
                     .putExtra("distance", distanceText.getText().toString())
@@ -121,9 +139,9 @@ public class SettingPopupActivity extends Activity {
                     .putExtra("destinationName", destinationText.getText().toString())
                     .putExtra("validity", validityText.getText().toString())
                     .putExtra("itemPosition", itemPosition);
+            if(destination == null) intent.putExtra("destinationList",appData.getString("destinationList"+itemPosition, ""));
             //수락 대기 목록 디비에 넘기기
             try {
-                appData = getSharedPreferences("appData", MODE_PRIVATE);
                 String myid = appData.getString("id", "");
                 String address = "http://iclab.andong.ac.kr/here/authorityInformationSave.jsp";
                 String recv = "";
@@ -184,19 +202,7 @@ public class SettingPopupActivity extends Activity {
 
     private void setSpinner(){
         /////////// 여기서부터는 알람대상에들어가는 spinner 제어를 위한 코드입니다. ///////////
-        //스피너안의 아이템의 클릭리스너
-        destinationTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if(position==0){
-                    goFriendSelect();
-                }else if(position==1){
-                    goMap();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
+
         // 아이템이 들어갈 리스트 선언
         List<String> spinnerItem = new ArrayList<>();
         spinnerItem.add("친구 목록");

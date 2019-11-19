@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {/**/
 
     ImageView mapImg;
     TextView optText;
@@ -39,14 +39,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        if (!(locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))) {
                             //GPS 설정화면으로 이동
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             intent.addCategory(Intent.CATEGORY_DEFAULT);
                             startActivity(intent);
+                            finish();
                         } else {
                             startActivity(new Intent(getApplication(), MapActivity.class));
-
+                            finish();
                         }
                     }
                 }
@@ -84,5 +85,4 @@ public class MainActivity extends AppCompatActivity {
     } catch (Exception e) {
         Log.e("name not found", e.toString());
     }*/
-
 }

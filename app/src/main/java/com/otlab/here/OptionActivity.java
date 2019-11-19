@@ -12,12 +12,13 @@ import android.widget.Toast;
 
 public class OptionActivity extends Activity {
 
-    Button logoutButton;
-    Button whoamiButton;
-    Button alarmSettingButton;
-    Button friendSettingButton;
-    Button developerButton;
-    Button acceptWaitingBtn; // 수락대기목록 가는 버튼
+    private Button logoutButton;
+    private Button whoamiButton;
+    private Button alarmSettingButton;
+    private Button friendSettingButton;
+    private Button developerButton;
+    private Button acceptWaitingBtn;
+
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -44,11 +45,11 @@ public class OptionActivity extends Activity {
                 logout();
             }
         });
-        //whoami버튼
+        //whoami 버튼
         whoamiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), getSharedPreferences("appData", MODE_PRIVATE).getString("ID", ""), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getSharedPreferences("appData", MODE_PRIVATE).getString("id", ""), Toast.LENGTH_SHORT).show();
             }
         });
         //알람 소리 설정 버튼
@@ -90,7 +91,7 @@ public class OptionActivity extends Activity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // 확인시 처리 로직
                         Toast.makeText(getApplicationContext(), "로그아웃을 완료했습니다.", Toast.LENGTH_SHORT).show();
-                        getSharedPreferences("appData", MODE_PRIVATE).edit().clear().commit();
+                        getSharedPreferences("appData", MODE_PRIVATE).edit().clear().apply();
                         startActivity(new Intent(getApplication(), SplashActivity.class));
                         finish();
                     }

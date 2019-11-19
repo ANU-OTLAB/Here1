@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,12 +21,17 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import net.daum.mf.map.api.MapCircle;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class MapActivity extends Activity {
 
@@ -51,6 +57,7 @@ public class MapActivity extends Activity {
     private String receiveMsg;
     private String[] positionList;
     private String[] buffer;
+    private String distance = ""; // 원 만들때 사용하는 반지름 값
 
 
     @Override
@@ -60,8 +67,6 @@ public class MapActivity extends Activity {
 
         Init();
         setListener();
-
-
         try {
             initMap();
             loadMap();
@@ -74,15 +79,17 @@ public class MapActivity extends Activity {
     }
 
     private void Init() {
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
+
         goLeftBtn = findViewById(R.id.goLeft);
         goRightBtn = findViewById(R.id.goRight);
         selectedSetting = findViewById(R.id.selectedSettingInformation);
         mapViewContainer = findViewById(R.id.map_view);
 
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
         listSize = appData.getInt("listSize", 0);
         settingItemPosition = 0;
         selectedSetting.setText(appData.getString("name" + settingItemPosition, ""));
+        distance = appData.getString("distance"+ settingItemPosition, "");
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
@@ -95,9 +102,11 @@ public class MapActivity extends Activity {
                 if (settingItemPosition - 1 < 0) {
                     settingItemPosition = listSize - 1;
                     selectedSetting.setText(appData.getString("name" + settingItemPosition, ""));
+                    distance = appData.getString("distance"+ settingItemPosition , "");
                 } else {
                     settingItemPosition--;
                     selectedSetting.setText(appData.getString("name" + (settingItemPosition), ""));
+                    distance = appData.getString("distance" + settingItemPosition, "");
                 }
                 removeMarker();
                 reloadAppData();
@@ -111,9 +120,11 @@ public class MapActivity extends Activity {
                 if (settingItemPosition >= listSize - 1) {
                     settingItemPosition = 0;
                     selectedSetting.setText(appData.getString("name" + settingItemPosition, ""));
+                    distance = appData.getString("distance"+ settingItemPosition , "");
                 } else {
                     settingItemPosition++;
                     selectedSetting.setText(appData.getString("name" + (settingItemPosition), ""));
+                    distance = appData.getString("distance"+ settingItemPosition , "");
                 }
                 removeMarker();
                 reloadAppData();
@@ -152,7 +163,7 @@ public class MapActivity extends Activity {
 
     private void loadMap(){
         myMarker = new MapPOIItem();
-        setupMarker("내 위치", myLocation, mapView, myMarker);
+        setupMarker("내 위치", myLocation, mapView, myMarker,distance);
 
         sendMsgList = new ArrayList();
         sendMsgList.add("observer");
@@ -197,14 +208,16 @@ public class MapActivity extends Activity {
                 buffer = positionList[i].split(" ");
                 destinationLocation[i] = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]), Double.parseDouble(buffer[1]));
                 destinationMarker[i] = new MapPOIItem();
-                setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i]);
+                setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i], distance);//ㅅㅈ
             }
+
         }catch (Exception e){}
     }
 
     private void removeMarker(){
         for(int i=0 ; i<destinationMarker.length ; i++) {
             mapView.removePOIItem(destinationMarker[i]);
+            mapView.removeAllCircles();
         }
     }
 
@@ -215,7 +228,7 @@ public class MapActivity extends Activity {
             for (int i = 0; i < positionList.length; i++) {
                 buffer = positionList[i].split(" ");
                 destinationLocation[i] = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]), Double.parseDouble(buffer[1]));
-                setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i]);
+                setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i], distance);// ㅅㅈ
             }
         }catch (Exception e){}
     }
@@ -237,19 +250,29 @@ public class MapActivity extends Activity {
             sendMsgList.set(4, location.getLatitude() + "");
             sendMsgList.set(6, location.getLongitude() + "");
             syncMarker();
+
+            for(int i =0; i<positionList.length; i++) {
+                if ((int)calculate(myMarker.getMapPoint().getMapPointGeoCoord().latitude, myMarker.getMapPoint().getMapPointGeoCoord().longitude, destinationMarker[i].getMapPoint().getMapPointGeoCoord().latitude, destinationMarker[i].getMapPoint().getMapPointGeoCoord().longitude) < Integer.parseInt(distance)) {
+                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(BackGroundWorker.class).build();
+                    WorkManager.getInstance().enqueue(workRequest);
+                }
+            }
+
         } catch (Exception e) {
         }
     }
 
-    private void setupMarker(String name, MapPoint mapPoint, MapView mapView, MapPOIItem marker) {
+    private void setupMarker(String name, MapPoint mapPoint, MapView mapView, MapPOIItem marker, String distance) {
         try {
-            double x = mapPoint.getMapPointGeoCoord().longitude;
-            double y = mapPoint.getMapPointGeoCoord().latitude;
             marker.setItemName(name);
             marker.setMapPoint(mapPoint);
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
             mapView.addPOIItem(marker);
             mapView.setZoomLevel(1, true);
+
+            // 원그리기
+            MapCircle circle = new MapCircle(mapPoint, Integer.parseInt(distance), Color.argb(128,255,0,0), Color.argb(128,255,255,0));
+            mapView.addCircle(circle);
         } catch (Exception e) {
         }
     }

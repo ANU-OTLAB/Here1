@@ -74,9 +74,9 @@ public class FriendSelectActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Destination[] destination = new Destination[listView.getCheckedItemCount()];
                 SparseBooleanArray checkedItemPositions =  listView.getCheckedItemPositions();
-                for (int i = 0; i < listView.getCount(); i++) {
+                for (int i = 0, j=0; i < listView.getCount(); i++) {
                     if(checkedItemPositions.get(i))
-                        destination[i] = new Destination(SettingItem.DestinationType.PERSON, listView.getItemAtPosition(i).toString().trim(), 0, 0);
+                        destination[j++] = new Destination(SettingItem.DestinationType.PERSON, listView.getItemAtPosition(i).toString().trim(), 0, 0);
                 }
                 intent.putExtra("destination", destination);
                 setResult(RESULT_OK, intent);
