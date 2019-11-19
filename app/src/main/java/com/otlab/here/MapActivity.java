@@ -119,7 +119,7 @@ public class MapActivity extends Activity {
 
             targetList = appData.getString("destinationList" + itemposition, "").split(" ");
 
-            if (targetList.length == 1) {
+            if (targetList.length == 1 && !targetList[0].equals("")) {
                 sendMsgList.add("numberOfTarget");
                 sendMsgList.add(targetList.length + "");
                 sendMsgList.add("target");
