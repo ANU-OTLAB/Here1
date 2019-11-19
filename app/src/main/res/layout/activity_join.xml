@@ -74,6 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:fontFamily="@font/my_font_family"
                 android:gravity="center"
                 android:text="Phone number" />
 

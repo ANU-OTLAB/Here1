@@ -45,6 +45,7 @@ public class MapActivity extends Activity {
     private MapPoint[] destinationLocation;
     private MapPOIItem myMarker;
     private MapPOIItem[] destinationMarker = new MapPOIItem[1];
+    private MapCircle[] destinationCircle;
     private Location location;
     private LocationListener gpsLocationListener;
     private LocationManager locationManager;
@@ -58,6 +59,7 @@ public class MapActivity extends Activity {
     private String[] positionList;
     private String[] buffer;
     private String distance = ""; // 원 만들때 사용하는 반지름 값
+    private boolean sync = false;
 
 
     @Override
@@ -133,7 +135,7 @@ public class MapActivity extends Activity {
         });
         gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                refreshPosition();
+                        refreshPosition(location);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -162,8 +164,6 @@ public class MapActivity extends Activity {
     }
 
     private void loadMap(){
-        myMarker = new MapPOIItem();
-        setupMarker("내 위치", myLocation, mapView, myMarker,distance);
 
         sendMsgList = new ArrayList();
         sendMsgList.add("observer");
@@ -200,37 +200,50 @@ public class MapActivity extends Activity {
 
     private void initMarker(){
         try {
+            myMarker = new MapPOIItem();
+            myMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage);
+            myMarker.setCustomImageResourceId(R.drawable.map_marker);
+            setupMarker("내 위치", myLocation, mapView, myMarker,distance);
             receiveMsg = (String) (new MessageThread(sendMsgList, "", "http://iclab.andong.ac.kr/here/location.jsp").execute().get());
             positionList = receiveMsg.split("/");
             destinationLocation = new MapPoint[positionList.length];
             destinationMarker = new MapPOIItem[positionList.length];
+            destinationCircle = new MapCircle[positionList.length];
             for (int i = 0; i < positionList.length; i++) {
                 buffer = positionList[i].split(" ");
                 destinationLocation[i] = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]), Double.parseDouble(buffer[1]));
                 destinationMarker[i] = new MapPOIItem();
                 setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i], distance);//ㅅㅈ
+
+                destinationCircle[i] = new MapCircle(destinationLocation[i], Integer.parseInt(distance), Color.argb(170,255,255,255), Color.argb(80,255,255,0));
+                mapView.addCircle(destinationCircle[i]);
             }
 
-        }catch (Exception e){}
-    }
-
-    private void removeMarker(){
-        for(int i=0 ; i<destinationMarker.length ; i++) {
-            mapView.removePOIItem(destinationMarker[i]);
-            mapView.removeAllCircles();
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
         }
     }
 
+    private void removeMarker(){
+            mapView.removeAllPOIItems();
+            mapView.removeAllCircles();
+    }
+
     private void syncMarker(){
+        sync = true;
         try {
             receiveMsg = (String) (new MessageThread(sendMsgList, "", "http://iclab.andong.ac.kr/here/location.jsp").execute().get());
             positionList = receiveMsg.split("/");
             for (int i = 0; i < positionList.length; i++) {
                 buffer = positionList[i].split(" ");
-                destinationLocation[i] = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]), Double.parseDouble(buffer[1]));
-                setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i], distance);// ㅅㅈ
+                MapPoint temp = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]), Double.parseDouble(buffer[1]));
+                 destinationLocation[i] = temp;
+                if(destinationCircle[i] != null) destinationCircle[i].setCenter(temp);
             }
-        }catch (Exception e){}
+        }catch (Exception e){
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+        }
+        sync = false;
     }
 
     private boolean checkPermission() {
@@ -244,12 +257,13 @@ public class MapActivity extends Activity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
     }
 
-    private void refreshPosition() {
+    private void refreshPosition(Location location) {
         try {
+            this.location = location;
             myMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude()));
-            sendMsgList.set(4, location.getLatitude() + "");
-            sendMsgList.set(6, location.getLongitude() + "");
-            syncMarker();
+            sendMsgList.set(3, location.getLatitude() + "");
+            sendMsgList.set(5, location.getLongitude() + "");
+            if(!sync) syncMarker();
 
             for(int i =0; i<positionList.length; i++) {
                 if ((int)calculate(myMarker.getMapPoint().getMapPointGeoCoord().latitude, myMarker.getMapPoint().getMapPointGeoCoord().longitude, destinationMarker[i].getMapPoint().getMapPointGeoCoord().latitude, destinationMarker[i].getMapPoint().getMapPointGeoCoord().longitude) < Integer.parseInt(distance)) {
@@ -271,8 +285,6 @@ public class MapActivity extends Activity {
             mapView.setZoomLevel(1, true);
 
             // 원그리기
-            MapCircle circle = new MapCircle(mapPoint, Integer.parseInt(distance), Color.argb(128,255,0,0), Color.argb(128,255,255,0));
-            mapView.addCircle(circle);
         } catch (Exception e) {
         }
     }

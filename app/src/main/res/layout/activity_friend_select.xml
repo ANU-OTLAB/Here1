@@ -9,14 +9,18 @@
     <ListView
         android:id="@+id/listview1"
         android:layout_width="match_parent"
-        android:layout_height="682dp"
-        android:choiceMode="multipleChoice" />
+        android:layout_height="672dp"
+        android:choiceMode="multipleChoice"></ListView>
 
     <Button
         android:id="@+id/ok"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="확인" />
+        android:layout_margin="10dp"
+        android:background="@drawable/button_round_edge"
+        android:fontFamily="@font/my_font_family"
+        android:text="확 인"
+        android:textSize="17sp"></Button>
 
 </LinearLayout>

@@ -1,8 +1,11 @@
 package com.otlab.here;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -10,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {/**/
 
@@ -46,8 +51,12 @@ public class MainActivity extends AppCompatActivity {/**/
                             startActivity(intent);
                             finish();
                         } else {
-                            startActivity(new Intent(getApplication(), MapActivity.class));
-                            finish();
+                            if (checkPermission()) {
+                                requestPermission();
+                            } else {
+                                startActivity(new Intent(getApplication(), MapActivity.class));
+                                finish();
+                            }
                         }
                     }
                 }
@@ -72,6 +81,18 @@ public class MainActivity extends AppCompatActivity {/**/
                 }
         );
     }
+
+    private boolean checkPermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+    }
+
 /*
     try {
         PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);

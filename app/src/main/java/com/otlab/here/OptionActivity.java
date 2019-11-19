@@ -4,20 +4,28 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class OptionActivity extends Activity {
 
     private Button logoutButton;
-    private Button whoamiButton;
     private Button alarmSettingButton;
     private Button friendSettingButton;
     private Button developerButton;
     private Button acceptWaitingBtn;
+    private LinearLayout whoamiLayout;
+    private Button whoamiButton;
+    private Button whoamicloseButton;
+    private SharedPreferences appData;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -30,7 +38,9 @@ public class OptionActivity extends Activity {
 
     private void loadView() {
         logoutButton = findViewById(R.id.logout);
+        whoamiLayout = findViewById(R.id.whoami_layout);
         whoamiButton = findViewById(R.id.whoami);
+        whoamicloseButton = findViewById(R.id.whoami_close);
         alarmSettingButton = findViewById(R.id.alarm);
         friendSettingButton = findViewById(R.id.friend);
         developerButton = findViewById(R.id.developer);
@@ -49,7 +59,13 @@ public class OptionActivity extends Activity {
         whoamiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), getSharedPreferences("appData", MODE_PRIVATE).getString("id", ""), Toast.LENGTH_SHORT).show();
+                whoami(whoamiLayout);
+            }
+        });
+        whoamicloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                whoamiclose(whoamiLayout);
             }
         });
         //알람 소리 설정 버튼
@@ -103,6 +119,32 @@ public class OptionActivity extends Activity {
                     }
                 })
                 .show();
+    }
+
+    //whoami 레이아웃 숨기기/보여주기
+    protected void whoami(LinearLayout layout){
+        TextView whoaminame = findViewById(R.id.whoami_name);
+        TextView whoamiid = findViewById(R.id.whoami_id);
+
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
+        String id = appData.getString("id","");
+
+        whoaminame.setText(appData.getString("name", ""));
+        whoamiid.setText(id);
+
+        Animation ani = new AlphaAnimation(0, 1);
+        if (layout.getVisibility() == View.GONE) {
+            ani.setDuration(1000);
+            layout.setVisibility(View.VISIBLE);
+            layout.setAnimation(ani);
+        } else {
+            layout.setVisibility(View.GONE);
+        }
+    }
+    protected void whoamiclose(LinearLayout layout){
+        if (layout.getVisibility() == View.VISIBLE) {
+            layout.setVisibility(View.GONE);
+        }
     }
 
     @Override

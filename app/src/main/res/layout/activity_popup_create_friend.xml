@@ -4,38 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E8E8E8"
     tools:context=".CreateFriendActivity">
 
-    <Button
-        android:id="@+id/NewFriend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="44dp"
-        android:text="확인"
-        app:layout_constraintStart_toStartOf="@+id/NewFriendName"
-        app:layout_constraintTop_toBottomOf="@+id/NewFriendName" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
 
-    <EditText
-        android:id="@+id/NewFriendName"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="17dp"
-        android:layout_marginRight="17dp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp"
+        android:fontFamily="@font/my_font_family"
+        android:text="친구 ID"
         android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/NewFriendId" />
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/NewFriendId"
+        app:layout_constraintEnd_toStartOf="@+id/NewFriendId"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/NewFriendId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"
+        android:background="@drawable/under_line"
         android:ems="10"
+        android:fontFamily="@font/my_font_family"
         android:inputType="textPersonName"
         android:textColor="#000000"
         app:layout_constraintBottom_toTopOf="@+id/textView5"
@@ -49,23 +48,42 @@
         android:layout_marginTop="228dp"
         android:layout_marginEnd="11dp"
         android:layout_marginRight="11dp"
+        android:fontFamily="@font/my_font_family"
         android:text="친구 이름"
+        android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/NewFriendName"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView4"
+    <EditText
+        android:id="@+id/NewFriendName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
-        android:text="친구 ID"
-        android:textSize="18sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/NewFriendId"
-        app:layout_constraintEnd_toStartOf="@+id/NewFriendId"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:background="@drawable/under_line"
+        android:ems="10"
+        android:fontFamily="@font/my_font_family"
+        android:inputType="textPersonName"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/NewFriendId" />
+
+    <Button
+        android:id="@+id/NewFriend"
+        android:layout_width="208dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_round_edge"
+        android:fontFamily="@font/my_font_family"
+        android:text="확 인"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@+id/NewFriendName"
+        app:layout_constraintTop_toBottomOf="@+id/NewFriendName" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

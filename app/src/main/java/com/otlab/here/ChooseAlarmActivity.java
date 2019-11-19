@@ -46,7 +46,7 @@ public class ChooseAlarmActivity extends AppCompatActivity {
                 appData = getSharedPreferences("appData", MODE_PRIVATE);
                 editor = appData.edit();
                 editor.putString("alarmPath", path);
-                editor.commit();
+                editor.apply();
                 stopTest();
                 finish();
             }

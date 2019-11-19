@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginTop="10dp"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="ID" />
 
@@ -47,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
+            android:fontFamily="@font/my_font_family"
             android:hint="ID"
             android:inputType="textPersonName" />
 
@@ -54,6 +56,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="PASSWORD" />
 
@@ -63,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
+            android:fontFamily="@font/my_font_family"
             android:hint="****"
             android:inputType="textPassword" />
 
@@ -71,6 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="로그인 정보 기억하기" />
 
@@ -89,6 +94,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/button_round_edge"
+                android:fontFamily="@font/my_font_family"
                 android:text="Login" />
 
             <Button
@@ -99,6 +105,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_round_edge"
+                android:fontFamily="@font/my_font_family"
                 android:text="SIGN IN" />
         </LinearLayout>
     </LinearLayout>

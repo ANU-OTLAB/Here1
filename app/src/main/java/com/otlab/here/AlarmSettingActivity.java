@@ -51,7 +51,7 @@ public class AlarmSettingActivity extends AppCompatActivity {
         alarmsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String path = listItem.get(position).getPath().toString();
+                String path = listItem.get(position).toString();
                 String name = listItem.get(position).getAlarmName();
                 Intent intent = new Intent(getApplicationContext(), ChooseAlarmActivity.class);
                 intent.putExtra("alarmName", name);

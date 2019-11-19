@@ -22,6 +22,7 @@ public class SettingActivity extends Activity {
     private SharedPreferences appData;
     private SharedPreferences.Editor editor;
     private int listSize;
+    String distance;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -58,7 +59,7 @@ public class SettingActivity extends Activity {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int position, long id) {
                 String[] distanceInt = settingItemList.get(position).getDistance().split("M");
-
+                distance = distanceInt[0];
                 Intent intent = new Intent(getApplicationContext(), SettingPopupActivity.class);
 
                 intent.putExtra("settingName", settingItemList.get(position).getSettingName())
@@ -95,7 +96,7 @@ public class SettingActivity extends Activity {
             if (resultCode == RESULT_OK) {
 
                 String name = data.getStringExtra("settingName");
-                String distance = data.getStringExtra("distance")+"M";
+                distance = data.getStringExtra("distance");
                 String destinationName = data.getStringExtra("destinationName");
                 String validity = data.getStringExtra("validity");
                 int itemPosition = data.getIntExtra("itemPosition", 0);
@@ -128,7 +129,7 @@ public class SettingActivity extends Activity {
                 if (serviceType == SettingItem.ServiceType.UPDATE) {
                     //변경 된 데이터 리스트에 반영
                     settingItemList.get(itemPosition).setSettingName(name);
-                    settingItemList.get(itemPosition).setDistance(distance);
+                    settingItemList.get(itemPosition).setDistance(distance+"M");
                     settingItemList.get(itemPosition).setDestination(destinationName);
                     settingItemList.get(itemPosition).setValidity(validity);
                     customAdapter.notifyDataSetChanged();

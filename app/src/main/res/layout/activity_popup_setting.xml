@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="53dp"
             android:background="#878787"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="NOTICE"
             android:textColor="#fff"
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             android:alpha="0.87"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="알람이름"
             android:textColor="#FFFFFF"
@@ -47,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="@font/my_font_family"
             android:inputType="textPersonName"
             android:textSize="15sp" />
 
@@ -63,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="0.87"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="거리"
             android:textColor="#FFFFFF"
@@ -74,7 +78,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/my_font_family" />
 
     </LinearLayout>
 
@@ -88,6 +93,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="알람대상"
             android:textColor="#FFFFFF"
@@ -121,11 +127,12 @@
                 android:id="@+id/destinationText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/my_font_family"
                 android:gravity="center"
+                android:hint="지정되지 않았습니다."
                 android:textColor="#FFFFFF"
                 android:textSize="15sp"
-                android:visibility="visible"
-                android:hint="지정되지 않았습니다."/>
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 
@@ -139,6 +146,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:text="만료기한"
             android:textColor="#FFFFFF" />
@@ -147,12 +155,14 @@
             android:id="@+id/setVaildityBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/my_font_family"
             android:text="날짜 선택" />
 
         <TextView
             android:id="@+id/setValidity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:hint="지정되지 않았습니다."
             android:textSize="15sp" />
@@ -171,6 +181,7 @@
             android:layout_width="162dp"
             android:layout_height="53dp"
             android:background="#878787"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:padding="16dp"
             android:text="확인"
@@ -183,6 +194,7 @@
             android:layout_height="53dp"
             android:layout_weight="1"
             android:background="#878787"
+            android:fontFamily="@font/my_font_family"
             android:text="취소"
             android:textColor="#FFFFFF"
             android:textSize="17sp" />

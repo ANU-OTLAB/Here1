@@ -9,20 +9,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#E8E8E8"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/goLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="가자왼쪽으로" />
+            android:background="#00ff0000"
+            android:drawableStart="@drawable/arrow_left"
+            android:drawableLeft="@drawable/arrow_left"
+            android:paddingLeft="30dp" />
 
         <TextView
             android:id="@+id/selectedSettingInformation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="145dp"
+            android:layout_height="64dp"
+            android:layout_margin="10dp"
             android:layout_weight="8"
+            android:background="@drawable/under_line"
+            android:fontFamily="@font/my_font_family"
             android:gravity="center"
             android:textColor="#000000"
             android:textSize="20sp" />
@@ -31,12 +39,17 @@
             android:id="@+id/goRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="가자오른쪽으로" />
+            android:background="#00ff0000"
+            android:drawableEnd="@drawable/arrow_right"
+            android:drawableRight="@drawable/arrow_right"
+            android:paddingRight="30dp" />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#E8E8E8" />
 </LinearLayout>
