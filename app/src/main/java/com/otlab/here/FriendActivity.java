@@ -92,7 +92,7 @@ public class FriendActivity extends Activity {
 
             //로그인된 나의 아이디 가져오기
             appData = getSharedPreferences("appData", MODE_PRIVATE);
-            String myId = appData.getString("ID", "");
+            String myId = appData.getString("id", "");
             //MessageThread에 들어갈 파라미터값 생성
             String address = "http://iclab.andong.ac.kr/here/friendAdd.jsp";
             String recv = "";
@@ -125,7 +125,7 @@ public class FriendActivity extends Activity {
             String friendId = friendIdtxt.getText().toString();
             //로그인된 나의 아이디 가져오기
             appData = getSharedPreferences("appData", MODE_PRIVATE);
-            String myId = appData.getString("ID", "");
+            String myId = appData.getString("id", "");
             //MessageThread에 들어갈 파라미터값 생성
             String address = "http://iclab.andong.ac.kr/here/friendDelete.jsp";
             String recv = "";

@@ -16,6 +16,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String msgReceiveFromServer = null;
     String name; //SharedPreferences.Editor 객체 중복 생성을 방지하기 위해 임시로 저장
+    String id;
     private SharedPreferences appData;
 
     private EditText idText;
@@ -90,9 +91,13 @@ public class LoginActivity extends AppCompatActivity {
                     appData = getSharedPreferences("appData", MODE_PRIVATE);
                     SharedPreferences.Editor editor = appData.edit();
 
-                    editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
-                    editor.putString("ID", idText.getText().toString().trim());
-                    editor.putString("NAME", name);
+                    id = appData.getString("id", "");
+                    if(!id.equals(idText.getText().toString().trim())){
+                        editor.clear().commit();
+                    }
+                    editor.putBoolean("autoLogin", checkBox.isChecked());
+                    editor.putString("id", idText.getText().toString().trim());
+                    editor.putString("name", name);
 
                     // apply, commit 을 안하면 변경된 내용이 저장되지 않음
                     editor.apply();

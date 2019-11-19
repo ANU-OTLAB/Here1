@@ -39,7 +39,7 @@ public class SplashActivity extends Activity {
     // 설정값을 불러오는 함수(자동 로그인 여부, 이름)
     private void load() {
         appData = getSharedPreferences("appData", MODE_PRIVATE);
-        autoLogin = appData.getBoolean("SAVE_LOGIN_DATA", false);
-        name = appData.getString("NAME", "");
+        autoLogin = appData.getBoolean("autoLogin", false);
+        name = appData.getString("name", "");
     }
 }

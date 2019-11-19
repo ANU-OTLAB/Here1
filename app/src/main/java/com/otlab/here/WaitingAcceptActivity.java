@@ -39,7 +39,7 @@ public class WaitingAcceptActivity extends AppCompatActivity {
             String recv = "";
             ArrayList<String> sendMsg = new ArrayList<>();
             sendMsg.add("target");
-            sendMsg.add(appData.getString("ID", ""));
+            sendMsg.add(appData.getString("id", ""));
             MessageThread send = new MessageThread(sendMsg, recv, address);
             recv = (String)send.execute().get();
 

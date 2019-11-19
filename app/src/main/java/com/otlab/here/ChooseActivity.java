@@ -59,7 +59,7 @@ public class ChooseActivity extends AppCompatActivity {
             sendMsg.add("observer");
             sendMsg.add(intent.getStringExtra("requestId"));
             sendMsg.add("target");
-            sendMsg.add(appData.getString("ID", ""));
+            sendMsg.add(appData.getString("id", ""));
             sendMsg.add("validity");
             sendMsg.add(result);
 

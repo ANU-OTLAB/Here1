@@ -3,9 +3,9 @@ package com.otlab.here;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,11 +18,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import net.daum.mf.map.api.MapCircle;
+
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
@@ -34,12 +33,25 @@ public class MapActivity extends Activity {
     private ViewGroup mapViewContainer;
     private MapView mapView;
     private MapPoint myLocation;
-    private MapPoint destinationLocation[];
+    private MapPoint[] destinationLocation;
     private MapPOIItem myMarker;
     private MapPOIItem[] destinationMarker = new MapPOIItem[1];
     private Location location;
-    private Handler handler;
+    final LocationListener gpsLocationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            refreshPosition();
+        }
 
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+    };
+    private Handler handler;
     // 맵뷰 위에 띄워줄 구성품들 선언
     private Button goLeftBtn;
     private Button goRightBtn;
@@ -47,6 +59,17 @@ public class MapActivity extends Activity {
     private SharedPreferences appData;
     private int listSize;
     private int itemposition;
+    String[] targetList;
+
+    // 이 함수는 그냥 필요합니다 이해할려고 하지 마십시요.
+    private static double degtorad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    //이 함수도 필요하답니다 이해할려고 하지 마십시오.
+    private static double radtodeg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -63,7 +86,7 @@ public class MapActivity extends Activity {
         try {
             if (checkPermission()) {
                 requestPermission();
-                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, gpsLocationListener);
@@ -72,7 +95,7 @@ public class MapActivity extends Activity {
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             myLocation = MapPoint.mapPointWithGeoCoord(location.getLatitude(), location.getLongitude());
 
-            mapView = new MapView(this);
+            if (mapView == null) mapView = new MapView(this);
             mapViewContainer = findViewById(R.id.map_view);
 
             mapView.setMapCenterPoint(myLocation, false);
@@ -80,45 +103,59 @@ public class MapActivity extends Activity {
 
 
             myMarker = new MapPOIItem();
-            newMarker("내 위치", myLocation, mapView, myMarker);
+            setupMarker("내 위치", myLocation, mapView, myMarker);
+
+            //이게 내가 최초로 만든 Marker 임
+
+
             ArrayList<String> sendMsgList = new ArrayList();
             sendMsgList.add("observerX");
-            sendMsgList.add(location.getLatitude()+"");
+            sendMsgList.add(myLocation.getMapPointGeoCoord().latitude + "");
             sendMsgList.add("observerY");
-            sendMsgList.add(location.getLongitude()+"");
+            sendMsgList.add(myLocation.getMapPointGeoCoord().longitude + "");
             sendMsgList.add("observer");
             sendMsgList.add(appData.getString("id", ""));
 
 
-            String[] buffer = appData.getString("destinationList"+itemposition,"").split(" ");
+            targetList = appData.getString("destinationList" + itemposition, "").split(" ");
 
-            if(buffer.length==1){
-                sendMsgList.add("target");
-                sendMsgList.add(buffer[0]);
-            }else if(buffer.length>=2){
+            if (targetList.length == 1) {
                 sendMsgList.add("numberOfTarget");
-                sendMsgList.add(buffer.length+"");
+                sendMsgList.add(targetList.length + "");
+                sendMsgList.add("target");
+                sendMsgList.add(targetList[0]);
+            } else if (targetList.length >= 2) {
+                sendMsgList.add("numberOfTarget");
+                sendMsgList.add(targetList.length + "");
 
-                for(int i=0 ; i<buffer.length ; i++){
-                    sendMsgList.add("target"+(i+1));
-                    sendMsgList.add(buffer[i]);
+                for (int i = 0; i < targetList.length; i++) {
+                    sendMsgList.add("target" + (i + 1));
+                    sendMsgList.add(targetList[i]);
                 }
             }
 
-            String sendMsg = (String)(new MessageThread(sendMsgList,"", "http://iclab.andong.ac.kr/here/location.jsp").execute().get());
-            String[] positionList = sendMsg.split("/");
+            String receiveMsg = (String) (new MessageThread(sendMsgList, "", "http://iclab.andong.ac.kr/here/location.jsp").execute().get());
+            String[] positionList = receiveMsg.split("/");
             destinationLocation = new MapPoint[positionList.length];
             destinationMarker = new MapPOIItem[positionList.length];
-            for(int i=0 ; i<positionList.length ; i++){
-                buffer = positionList[i].split(" ");
-                destinationLocation[i] = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]),Double.parseDouble(buffer[1]));
+            for (int i = 0; i < positionList.length; i++) {
+                String[] buffer = positionList[i].split(" ");
+                destinationLocation[i] = MapPoint.mapPointWithGeoCoord(Double.parseDouble(buffer[0]), Double.parseDouble(buffer[1]));
                 destinationMarker[i] = new MapPOIItem();
-                destinationMarker[i].setItemName("커스텀 마커"); // 마커이름
-                destinationMarker[i].setMapPoint(destinationLocation[i]); // 마커좌표
+                setupMarker(targetList[i], destinationLocation[i], mapView, destinationMarker[i]);
+
+                /*
                 destinationMarker[i].setMarkerType(MapPOIItem.MarkerType.CustomImage); //마커를 커스텀마커 타입으로 선언
                 destinationMarker[i].setCustomImageResourceId(R.drawable.whoami); //마커에 사용할 이미지 넣기
                 mapView.addPOIItem(destinationMarker[i]); // 맵에 표시
+                 */
             }
+
+            MapPOIItem p1 = new MapPOIItem();
+            MapPOIItem p2 = new MapPOIItem();
+            setupMarker("1", MapPoint.mapPointWithCONGCoord(36.543411, 128.791954), mapView, p1);
+            setupMarker("2", MapPoint.mapPointWithCONGCoord(128.791954,  36.543411), mapView, p2);
+
 
             //원그리기//
             // 원그리기 (중심의 좌표, 반지름, 선의 색깔, 원안에 색깔)
@@ -127,7 +164,7 @@ public class MapActivity extends Activity {
             ////////////
             double distance = calculate(myLocation.getMapPointGeoCoord().latitude, myLocation.getMapPointGeoCoord().longitude, destinationLocation[0].getMapPointGeoCoord().latitude, destinationLocation[0].getMapPointGeoCoord().longitude);// 좌표사이의 거리계산
             // distance를 int형으로 타입캐스팅후 30m안으로 가까이 올때 백그라운드 작업 시작
-            if((int)distance < 30){
+            if ((int) distance < 30) {
                     /*OneTimeWorkRequest testwork = new OneTimeWorkRequest.Builder(BackGroundWorker.class).build(); // 아무런 제약 조건없이 백그라운드 work 생성
                     WorkManager.getInstance().enqueue(testwork); // 생성된 work를 queue에 넣으면 폰이 알아서 시작*/
             }
@@ -136,11 +173,11 @@ public class MapActivity extends Activity {
         } catch (Exception e) {
             Log.d("??", e.getMessage());
             Toast.makeText(getApplicationContext(), "GPS 연결에 실패하였습니다.", Toast.LENGTH_LONG).show();
-            finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
     }
 
-    private void loadView(){
+    private void loadView() {
         // 위에 세팅 정보를 가져오고 다른 세팅정보로도 넘어갈수있게 구현
         goLeftBtn = findViewById(R.id.goLeft);
         goRightBtn = findViewById(R.id.goRight);
@@ -148,16 +185,16 @@ public class MapActivity extends Activity {
         appData = getSharedPreferences("appData", MODE_PRIVATE);
         listSize = appData.getInt("listSize", 0);
         itemposition = 0;
-        selectedSetting.setText(appData.getString("name"+itemposition, ""));
+        selectedSetting.setText(appData.getString("name" + itemposition, ""));
     }
 
-    private void setListener(){
+    private void setListener() {
         goLeftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(itemposition-1 < 0) {
-                    itemposition = listSize-1;
-                    selectedSetting.setText(appData.getString("name"+ itemposition, ""));
+                if (itemposition - 1 < 0) {
+                    itemposition = listSize - 1;
+                    selectedSetting.setText(appData.getString("name" + itemposition, ""));
                 } else {
                     itemposition--;
                     selectedSetting.setText(appData.getString("name" + (itemposition), ""));
@@ -167,44 +204,29 @@ public class MapActivity extends Activity {
         goRightBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(itemposition >= listSize-1){
+
+                if (itemposition >= listSize - 1) {
                     itemposition = 0;
-                    selectedSetting.setText(appData.getString("name"+itemposition,""));
+                    selectedSetting.setText(appData.getString("name" + itemposition, ""));
                 } else {
                     itemposition++;
-                    selectedSetting.setText(appData.getString("name"+(itemposition), ""));
+                    selectedSetting.setText(appData.getString("name" + (itemposition), ""));
                 }
+
             }
         });
     }
 
-    private boolean checkPermission(){
-        if(Build.VERSION.SDK_INT >= 23
-                && ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            return true;
-        return false;
+    private boolean checkPermission() {
+        return Build.VERSION.SDK_INT >= 23
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission(){
+    private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
     }
-
-    final LocationListener gpsLocationListener = new LocationListener() {
-        public void onLocationChanged(Location location) {
-            refreshPosition();
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onProviderDisabled(String provider) {
-        }
-    };
 
     private void refreshPosition() {
         try {
@@ -214,10 +236,11 @@ public class MapActivity extends Activity {
         }
     }
 
-    private void newMarker(String name, MapPoint mapPoint, MapView mapView, MapPOIItem marker) {
+    private void setupMarker(String name, MapPoint mapPoint, MapView mapView, MapPOIItem marker) {
         try {
+            double x = mapPoint.getMapPointGeoCoord().longitude;
+            double y = mapPoint.getMapPointGeoCoord().latitude;
             marker.setItemName(name);
-            marker.setTag(0);
             marker.setMapPoint(mapPoint);
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
             mapView.addPOIItem(marker);
@@ -225,28 +248,22 @@ public class MapActivity extends Activity {
         } catch (Exception e) {
         }
     }
+
     // 이함수는 WGS84 기준의 두 좌표 사이의 거리를 구하는 함수입니다. 저도 뭔소린지 모르겠습니다.
-    private double calculate(double lat1, double lon1, double lat2, double lon2){
+    private double calculate(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
-        double dist = (Math.sin(degtorad(lat1))*Math.sin(degtorad(lat2))) + (Math.cos(degtorad(lat1))*Math.cos(degtorad(lat2))*Math.cos(degtorad(theta)));
+        double dist = (Math.sin(degtorad(lat1)) * Math.sin(degtorad(lat2))) + (Math.cos(degtorad(lat1)) * Math.cos(degtorad(lat2)) * Math.cos(degtorad(theta)));
 
         dist = Math.acos(dist);
         dist = radtodeg(dist);
-        dist = dist*60*1.1515;
-        dist = dist*1609.344;
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1609.344;
         return (dist);
 
     }
-    // 이 함수는 그냥 필요합니다 이해할려고 하지 마십시요.
-    private static double degtorad(double deg){
-        return (deg * Math.PI/180.0);
-    }
-    //이 함수도 필요하답니다 이해할려고 하지 마십시오.
-    private static double radtodeg(double rad){
-        return(rad * 180/ Math.PI);
-    }
+
     public void onPause() {
         super.onPause();
-        finish();
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 }

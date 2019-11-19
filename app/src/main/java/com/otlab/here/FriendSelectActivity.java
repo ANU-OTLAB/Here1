@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,10 +35,12 @@ public class FriendSelectActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_friend_select);
 
+        Toast.makeText(getApplicationContext(), "현재는 개발 중이라 한 명 밖에 선택하지 못합니다.\n죄송합니다 ^^", Toast.LENGTH_LONG).show();
+
         listView = findViewById(R.id.listview1);
         okBtn = findViewById(R.id.ok);
 
-        id = getSharedPreferences("appData", MODE_PRIVATE).getString("ID", " ");
+        id = getSharedPreferences("appData", MODE_PRIVATE).getString("id", " ");
         intent = getIntent();
 
         ArrayList<String> items = new ArrayList();

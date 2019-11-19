@@ -124,7 +124,7 @@ public class SettingPopupActivity extends Activity {
             //수락 대기 목록 디비에 넘기기
             try {
                 appData = getSharedPreferences("appData", MODE_PRIVATE);
-                String myid = appData.getString("ID", "");
+                String myid = appData.getString("id", "");
                 String address = "http://iclab.andong.ac.kr/here/authorityInformationSave.jsp";
                 String recv = "";
                 ArrayList<String> sendmsg = new ArrayList<>();
