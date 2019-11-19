@@ -10,7 +10,7 @@
         android:id="@+id/listview1"
         android:layout_width="match_parent"
         android:layout_height="682dp"
-        android:choiceMode="singleChoice" />
+        android:choiceMode="multipleChoice" />
 
     <Button
         android:id="@+id/ok"
