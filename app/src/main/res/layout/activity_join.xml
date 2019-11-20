@@ -149,8 +149,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:fontFamily="@font/my_font_family"
-                android:hint="****"
-                android:inputType="textPassword" />
+                android:hint="8자리이상(문자,숫자,특수기호)"
+                android:inputType="textPassword"
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="0dp"
