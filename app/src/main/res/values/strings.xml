@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Here</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+
+    <string name="appData">appData</string>
+    <string name="name">name</string>
+    <string name="distance">distance</string>
+    <string name="destination">destination</string>
+    <string name="destinationName">destinationName</string>
+    <string name="destinationList">destinationList</string>
+    <string name="validity">validity</string>
+    <string name="listSize">listSize</string>
+    <string name="name1">1</string>
 </resources>

@@ -7,55 +7,114 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class LoginActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class LoginActivity extends AppCompatActivity {/*check*/
+
+    String msgReceiveFromServer = null;
+    String name; //SharedPreferences.Editor 객체 중복 생성을 방지하기 위해 임시로 저장
+    String id;
+    private SharedPreferences appData;
 
     private EditText idText;
-    private EditText pwdText;
+    private EditText pwText;
     private CheckBox checkBox;
     private Button loginBtn;
-
-    private SharedPreferences appData;
+    private Button joinBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // 설정값 불러오기
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
 
+        loadView();
+        setListener();
+    }
+
+    private void goMain() {
+        startActivity(new Intent(getApplication(), MainActivity.class));
+        finish();
+    }
+
+    private void goJoin() {
+        startActivity(new Intent(getApplication(), JoinActivity.class));
+        finish();
+    }
+
+    // 서버에 id, pw를 전송 후 로그인 성공여부와 사용자 이름을 불러 옴
+    private boolean requestValidationCheck() {
+        try {
+            ArrayList<String> sendMsg = new ArrayList<>();
+            sendMsg.add("id");
+            sendMsg.add(idText.getText().toString());
+            sendMsg.add("pw");
+            sendMsg.add(pwText.getText().toString());
+
+            //new MessageThread(보낼 메시지 ArrayList<String>, 받을 메세지 객체, 주소스트링)
+            MessageThread messageThread = new MessageThread(sendMsg, msgReceiveFromServer, "http://iclab.andong.ac.kr/here/login.jsp");
+            msgReceiveFromServer = (String) messageThread.execute().get();
+        } catch (Exception e) {
+        }
+
+        if (msgReceiveFromServer.equals("LOGIN_FAILED"))
+            return false;
+
+        //이름 추출
+        String[] msgList = msgReceiveFromServer.split("/");
+        name = msgList[1];
+
+        return true;
+    }
+
+    // view 불러오기
+    private void loadView() {
         idText = findViewById(R.id.idText);
-        pwdText = findViewById(R.id.pwdText);
+        pwText = findViewById(R.id.pwdText);
         checkBox = findViewById(R.id.checkBox);
         loginBtn = findViewById(R.id.loginBtn);
+        joinBtn = findViewById(R.id.joinBtn);
+    }
 
+    private void setListener() {
+        //loginButton 클릭 리스너
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 로그인 성공시 저장 처리, 예제는 무조건 저장
-                save();
-                startActivity(new Intent(getApplication(), SplashActivity.class));
-                finish();
+                //서버와의 통신 확인
+                if (requestValidationCheck()) {
+
+                    // SharedPreferences 객체만으론 저장 불가능 Editor 사용
+                    appData = getSharedPreferences("appData", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = appData.edit();
+
+                    id = appData.getString("id", "");
+                    if (!id.equals(idText.getText().toString().trim())) {
+                        editor.clear().apply();
+                    }
+                    editor.putBoolean("autoLogin", checkBox.isChecked());
+                    editor.putString("id", idText.getText().toString().trim());
+                    editor.putString("name", name);
+
+                    // apply, commit 을 안하면 변경된 내용이 저장되지 않음
+                    editor.apply();
+                    goMain();
+                } else {
+                    Toast.makeText(getApplicationContext(), "ID 또는 비밀번호를 확인 해 주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //joinButton 클릭 리스너
+        joinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goJoin();
             }
         });
     }
-
-    // 설정값을 저장하는 함수
-    private void save() {
-        // SharedPreferences 객체만으론 저장 불가능 Editor 사용
-        SharedPreferences.Editor editor = appData.edit();
-
-        // 에디터객체.put타입( 저장시킬 이름, 저장시킬 값 )
-        // 저장시킬 이름이 이미 존재하면 덮어씌움
-        editor.putBoolean("SAVE_LOGIN_DATA", checkBox.isChecked());
-        editor.putString("ID", idText.getText().toString().trim());
-        editor.putString("PWD", pwdText.getText().toString().trim());
-
-        // apply, commit 을 안하면 변경된 내용이 저장되지 않음
-        editor.apply();
-    }
-
 }

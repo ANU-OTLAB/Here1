@@ -14,34 +14,34 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:background="@drawable/main_border"
-        android:gravity="center|start"
+        android:gravity="center"
         android:singleLine="false"
-        android:text="Here"
+        android:text="다와가"
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textIsSelectable="false"
         android:textSize="50sp"
         android:textStyle="bold"
-        app:fontFamily="serif" />
+        app:fontFamily="@font/my_font_family" />
 
     <ImageView
         android:layout_width="380dp"
         android:layout_height="420dp"
         android:layout_gravity="center"
         android:background="@drawable/main_border"
-        android:onClick="showMap"
+        android:id="@+id/mapImg"
         android:src="@drawable/map"></ImageView>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/optText"
         android:layout_width="match_parent"
         android:layout_height="124dp"
         android:layout_gravity="center"
         android:background="#E8E8E8"
         android:clickable="false"
         android:drawableLeft="@drawable/option"
+        android:fontFamily="@font/my_font_family"
         android:gravity="center"
-        android:onClick="goOption"
         android:paddingLeft="70dip"
         android:paddingRight="100dip"
         android:text="OPTION"
@@ -50,14 +50,14 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/setText"
         android:layout_width="match_parent"
         android:layout_height="124dp"
         android:background="#E8E8E8"
         android:clickable="false"
         android:drawableLeft="@drawable/settings"
+        android:fontFamily="@font/my_font_family"
         android:gravity="center"
-        android:onClick="goSetting"
         android:paddingLeft="89dip"
         android:paddingRight="67dip"
         android:text="SETTING"
