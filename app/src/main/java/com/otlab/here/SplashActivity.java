@@ -9,27 +9,19 @@ import android.widget.Toast;
 
 public class SplashActivity extends Activity {
 
-    private Handler hd;
-
-    private boolean autoLogin;
-    private String name;
-
-    private SharedPreferences appData;
+    private SharedPreferences hereData;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_splash);
 
-        hd = new Handler();
-        hd.postDelayed(new SplashHandler(), 3000);
+        hereData = getSharedPreferences(String.valueOf(R.string.appData), MODE_PRIVATE);
+        boolean autoLogin = hereData.getBoolean(String.valueOf(R.string.autoLogin), false);
+        String name = hereData.getString(String.valueOf(R.string.name), "");
 
-        //자동 로그인 여부 확인
-        load();
-    }
 
-    private class SplashHandler implements Runnable {
-        public void run() {
+        new Handler().postDelayed(() -> {
             if (autoLogin) {
                 Toast.makeText(getApplicationContext(), name + "님 환영합니다.", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplication(), MainActivity.class));
@@ -38,7 +30,8 @@ public class SplashActivity extends Activity {
                 startActivity(new Intent(getApplication(), LoginActivity.class));
                 finish();
             }
-        }
+        }, 3000);
+
     }
 
     //뒤로가기 버튼 방지
@@ -46,10 +39,4 @@ public class SplashActivity extends Activity {
     public void onBackPressed() {
     }
 
-    // 설정값을 불러오는 함수(자동 로그인 여부, 이름)
-    private void load() {
-        appData = getSharedPreferences("appData", MODE_PRIVATE);
-        autoLogin = appData.getBoolean("autoLogin", false);
-        name = appData.getString("name", "");
-    }
 }

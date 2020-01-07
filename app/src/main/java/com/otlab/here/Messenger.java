@@ -1,6 +1,5 @@
 package com.otlab.here;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -11,20 +10,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-/**
- * 생성자에 msg를 넣어주고 getMessage를 실행하거나
- * 객체를 생성 후 getMessage에 msg를 입력받아 서버로 부터 전송 받은 값 반환
- */
-public class MessageThread extends AsyncTask {
-
+public class Messenger extends Thread {
     private String sendMsg = "";
     private String receiveMsg;
     private String address;
 
-    public MessageThread(ArrayList<String> sendMsgList, String address) {
+    public Messenger(ArrayList<String> sendMsgList,  String address) {
         this.address = address;
 
-        //make parameter message
         if (sendMsgList.size() % 2 == 0) {
             for (int i = 0; i < sendMsgList.size(); i += 2) {
                 if (i >= 2) sendMsg += "&";
@@ -36,12 +29,11 @@ public class MessageThread extends AsyncTask {
             sendMsg = "";
         }
     }
-    public MessageThread(ArrayList<String> sendMsgList, String s, String address) {
-        this(sendMsgList, address);
-    }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    public void run() {
+        super.run();
+
         String readMsg;
 
         if (Here.checkVersion()) {
@@ -69,6 +61,9 @@ public class MessageThread extends AsyncTask {
                 Log.d("???????????", e.toString());
             }
         }
+    }
+
+    public String getMsg(){
         return receiveMsg;
     }
 }
